@@ -9,9 +9,19 @@ import tkinter as tk, tkinter.ttk, tkinter.filedialog, tkinter.messagebox, os, s
 
 # try:
 #     import ft232
-# except Exception as e: 
+# except Exception as e:
 #     print(platform.system)
-#     tkinter.messagebox.showerror('Drivers Not Detected', 'Please verify the correct drivers are installed.  Without the correct dirvers, firmware update functionality will be unavailable.\n\n - Windows 10 and above should automatically install the correct drivers when the Expansion Hub is plugged in.\n\n - Windows 7 requires a manual install. Please see this link for the correct driver (FTDI D2xx): https://www.ftdichip.com/Drivers/CDM/CDM21228_Setup.zip\n\n - On macOS, install libftdi via Homebrew: "brew install libftdi"\n\n - On Linux, install libftdi.  On Debian/Ubuntu-based systems, install it via "sudo apt install libftdi1"\n\nException Message:\n' + str(e))
+#     tkinter.messagebox.showerror('Drivers Not Detected',
+#                                  'Please verify the correct drivers are installed. Without the correct drivers, '
+#                                  'firmware update functionality will be unavailable.'
+#                                  '\n\n - Windows 10 and above should'
+#                                  ' automatically install the correct drivers when the Expansion Hub is plugged in.'
+#                                  '\n\n - Windows 7 requires a manual install. Please see this link '
+#                                  'for the correct driver (FTDI D2xx): '
+#                                  'https://www.ftdichip.com/Drivers/CDM/CDM21228_Setup.zip\n\n '
+#                                  '- On macOS, install libftdi via Homebrew: "brew install libftdi"\n\n '
+#                                  '- On Linux, install libftdi.  On Debian/Ubuntu-based systems, install it '
+#                                  'via "sudo apt install libftdi1"\n\nException Message:\n' + str(e))
 
 def validate_float(action, index, value_if_allowed, prior_value, text, validation_type, trigger_type,
                    widget_name):
