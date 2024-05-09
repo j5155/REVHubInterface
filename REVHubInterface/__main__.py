@@ -44,14 +44,14 @@ class DeviceInfo:
     def __init__(self, root, set_address):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
-        root.grid(sticky=(N, S, E, W))
+        root.grid(sticky="NSEW")
         self.device_info_frame = tkinter.ttk.Frame(root)
         self.device_label = tkinter.ttk.Label(self.device_info_frame)
         self.Frame_1 = tkinter.ttk.Frame(self.device_info_frame)
         self.Button_1 = tkinter.ttk.Button(self.Frame_1)
 
         self.device_info_frame.config(height=100, width=100)
-        self.device_info_frame.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.device_info_frame.grid(column=0, row=0, sticky="NSEW")
         self.device_info_frame.grid_rowconfigure(0, weight=1)
         self.device_info_frame.grid_columnconfigure(0, weight=1)
 
@@ -77,7 +77,7 @@ class DeviceInfo:
 #         self.INTERFACE_VERSION = '1.3.0'
 #         root.grid_columnconfigure(0, weight=1)
 #         root.grid_rowconfigure(0, weight=1)
-#         root.grid(sticky=(N, S, E, W))
+#         root.grid(sticky="NSEW")
 #         self.firmware_frame = tkinter.ttk.Frame(root)
 #         self.firmware_label = tkinter.ttk.Label(self.firmware_frame)
 #         self.warning_block = tk.Text(self.firmware_frame)
@@ -87,12 +87,12 @@ class DeviceInfo:
 #         self.Device_info_frame1 = tkinter.ttk.Frame(self.firmware_frame)
 #         
 #        self.firmware_frame.config(height=200, width=200)
-#        self.firmware_frame.grid(column=0, row=0, sticky=(N, S, E, W))
+#        self.firmware_frame.grid(column=0, row=0, sticky="NSEW")
 #        self.firmware_frame.grid_rowconfigure(0, weight=1)
 #        self.firmware_frame.grid_columnconfigure(0, weight=1)
 #
 #        self.Device_info_frame1.config(height=100, width=100)
-#        self.Device_info_frame1.grid(column=0, row=4, sticky=(N, S, E, W))
+#        self.Device_info_frame1.grid(column=0, row=4, sticky="NSEW")
 #        self.Device_info_frame1.grid_rowconfigure(0, weight=1)
 #        self.Device_info_frame1.grid_columnconfigure(0, weight=1)
 #
@@ -100,7 +100,7 @@ class DeviceInfo:
 #        self.firmware_label.grid(column=0, columnspan=2, padx=5, pady=5, row=1, sticky=(E, W))
 #
 #        self.warning_block.config(height=11, width=50, wrap='word')
-#        self.warning_block.grid(column=0, columnspan=2, row=0, sticky=(N, S, E, W))
+#        self.warning_block.grid(column=0, columnspan=2, row=0, sticky="NSEW")
 #
 #        self.Frame_1.config(height=200, width=200)
 #        self.Frame_1.grid(column=0, row=2, sticky=W)
@@ -116,7 +116,7 @@ class DigitalSingle:
     def __init__(self, root, set_input_callback, set_output_callback, digital_set, digital_poll):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
-        root.grid(sticky=(N, S, E, W))
+        root.grid(sticky="NSEW")
         true = True
         self.var2 = IntVar()
         self.digital_panel = tkinter.ttk.Frame(root)
@@ -130,7 +130,7 @@ class DigitalSingle:
         self.Checkbutton_1 = tkinter.ttk.Checkbutton(self.Frame_1)
 
         self.digital_panel.config(height=200, width=200, padding=(5, 5, 5, 5), relief='groove')
-        self.digital_panel.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.digital_panel.grid(column=0, row=0, sticky="NSEW")
         self.digital_panel.grid_rowconfigure(0, weight=1)
         self.digital_panel.grid_columnconfigure(0, weight=1)
 
@@ -138,7 +138,7 @@ class DigitalSingle:
         self.digital_label_1.grid(column=0, row=0, sticky=W, padx=0, pady=0, columnspan=1)
 
         self.Frame_1.config(height=200, width=200)
-        self.Frame_1.grid(column=0, row=1, columnspan=1, sticky=(N, S, E, W))
+        self.Frame_1.grid(column=0, row=1, columnspan=1, sticky="NSEW")
 
         self.Separator_1.config(orient='vertical')
         self.Separator_1.grid(column=3, padx=5, row=1, sticky=(N, S))
@@ -147,10 +147,10 @@ class DigitalSingle:
         self.State_label.grid(column=4, row=1)
 
         self.input_button.config(command=set_input_callback, text='IN')
-        self.input_button.grid(column=0, row=1, sticky=(N, S, E, W))
+        self.input_button.grid(column=0, row=1, sticky="NSEW")
 
         self.output_button.config(command=set_output_callback, text='OUT')
-        self.output_button.grid(column=1, row=1, sticky=(N, S, E, W))
+        self.output_button.grid(column=1, row=1, sticky="NSEW")
 
         self.Checkbutton_1.config(command=digital_set, offvalue=0, onvalue=1, state='disabled', variable=self.var2,
                                   width=0)
@@ -164,7 +164,7 @@ class AnalogSingle:
     def __init__(self, root):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
-        root.grid(sticky=(N, S, E, W))
+        root.grid(sticky="NSEW")
         self.analog_panel = tkinter.ttk.Frame(root)
         self.analog_label_1 = tkinter.ttk.Label(self.analog_panel)
         self.Frame_1 = tkinter.ttk.Frame(self.analog_panel)
@@ -175,7 +175,7 @@ class AnalogSingle:
         self.java_value_1 = tkinter.ttk.Label(self.Frame_1)
 
         self.analog_panel.config(height=200, padding=(5, 5, 5, 5), relief='ridge', width=200)
-        self.analog_panel.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.analog_panel.grid(column=0, row=0, sticky="NSEW")
         self.analog_panel.grid_rowconfigure(0, weight=1)
         self.analog_panel.grid_rowconfigure(1, weight=1)
         self.analog_panel.grid_columnconfigure(0, weight=1)
@@ -184,7 +184,7 @@ class AnalogSingle:
         self.analog_label_1.grid(column=0, padx=0, pady=0, row=0, sticky=W)
 
         self.Frame_1.config(height=200, width=200)
-        self.Frame_1.grid(column=0, pady=5, row=1, sticky=(N, S, E, W))
+        self.Frame_1.grid(column=0, pady=5, row=1, sticky="NSEW")
         self.Frame_1.grid_rowconfigure(0, weight=1)
         self.Frame_1.grid_rowconfigure(1, weight=1)
         self.Frame_1.grid_columnconfigure(0, weight=1)
@@ -211,7 +211,7 @@ class IoBox:
     def __init__(self, root, analog_add):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
-        root.grid(sticky=(N, S, E, W))
+        root.grid(sticky="NSEW")
         self.io_pack = tkinter.ttk.Frame(root)
         self.analog_pack = tkinter.ttk.Labelframe(self.io_pack)
         self.digital_pack = tkinter.ttk.Labelframe(self.io_pack)
@@ -220,13 +220,13 @@ class IoBox:
         self.innerFrame_1 = tkinter.ttk.Frame(self.digital_pack)
 
         self.io_pack.config(height=200, width=200)
-        self.io_pack.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.io_pack.grid(column=0, row=0, sticky="NSEW")
         self.io_pack.grid_rowconfigure(0, weight=1)
         self.io_pack.grid_rowconfigure(1, weight=1)
         self.io_pack.grid_columnconfigure(0, weight=1)
 
         self.analog_pack.config(height=200, text='Analog I/O', width=200)
-        self.analog_pack.grid(column=0, ipadx=5, ipady=5, row=0, sticky=(N, S, E, W))
+        self.analog_pack.grid(column=0, ipadx=5, ipady=5, row=0, sticky="NSEW")
         self.analog_pack.grid_rowconfigure(0, weight=1)
         self.analog_pack.grid_rowconfigure(1, weight=0)
         self.analog_pack.grid_columnconfigure(0, weight=1)
@@ -236,22 +236,22 @@ class IoBox:
         self.Button_1.grid(column=0, row=1, sticky=(E, W))
 
         self.innerFrame.config(height=200, width=200)
-        self.innerFrame.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.innerFrame.grid(column=0, row=0, sticky="NSEW")
 
         self.digital_pack.config(height=200, text='Digital I/O', width=200)
-        self.digital_pack.grid(column=0, row=1, sticky=(N, S, E, W))
+        self.digital_pack.grid(column=0, row=1, sticky="NSEW")
         self.digital_pack.grid_rowconfigure(0, weight=1)
         self.digital_pack.grid_columnconfigure(0, weight=1)
 
         self.innerFrame_1.config(height=200, width=200)
-        self.innerFrame_1.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.innerFrame_1.grid(column=0, row=0, sticky="NSEW")
 
 
 class ImuBox:
     def __init__(self, root, poll_imu_callback):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
-        root.grid(sticky=(N, S, E, W))
+        root.grid(sticky="NSEW")
         self.i2c_pack = tkinter.ttk.Labelframe(root)
         self.Label_2 = tkinter.ttk.Label(self.i2c_pack)
         self.Euler_label = tkinter.ttk.Label(self.i2c_pack)
@@ -261,10 +261,10 @@ class ImuBox:
         self.Poll_button = tkinter.ttk.Button(self.i2c_pack)
 
         self.i2c_pack.config(height=200, text='IMU', width=200)
-        self.i2c_pack.grid(column=0, padx=5, pady=5, row=0, sticky=(N, S, E, W))
+        self.i2c_pack.grid(column=0, padx=5, pady=5, row=0, sticky="NSEW")
 
         self.Label_2.config(text='IMU Sensor')
-        self.Label_2.grid(column=0, padx=5, pady=5, row=0, sticky=(N, S, E, W))
+        self.Label_2.grid(column=0, padx=5, pady=5, row=0, sticky="NSEW")
 
         self.Euler_label.config(text='Heading, Roll, Pitch:')
         self.Euler_label.grid(column=0, columnspan=2, padx=5, pady=5, row=1, sticky=W)
@@ -296,17 +296,17 @@ class I2cChan:
         self.Poll_button = tkinter.ttk.Button(self.Frame_2)
 
         self.Frame_1.config(height=200, width=200)
-        self.Frame_1.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.Frame_1.grid(column=0, row=0, sticky="NSEW")
         self.Frame_1.grid_rowconfigure(0, weight=1)
         self.Frame_1.grid_columnconfigure(0, weight=1)
 
         self.i2c_pack.config(height=200, padding=(1, 1, 1, 1), text='test', width=200)
-        self.i2c_pack.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.i2c_pack.grid(column=0, row=0, sticky="NSEW")
         self.i2c_pack.grid_rowconfigure(0, weight=1)
         self.i2c_pack.grid_columnconfigure(0, weight=1)
 
         self.Frame_2.config(borderwidth=2, height=200, width=100)
-        self.Frame_2.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.Frame_2.grid(column=0, row=0, sticky="NSEW")
         self.Frame_2.grid_rowconfigure(0, weight=1)
         self.Frame_2.grid_rowconfigure(1, weight=1)
         self.Frame_2.grid_rowconfigure(2, weight=2)
@@ -318,7 +318,7 @@ class I2cChan:
         self.Frame_2.grid_columnconfigure(1, weight=1)
 
         self.I2C_label.config(text='I2C Device (default: Color Sensor)')
-        self.I2C_label.grid(column=0, padx=5, pady=5, row=0, sticky=(N, S, E, W))
+        self.I2C_label.grid(column=0, padx=5, pady=5, row=0, sticky="NSEW")
 
         self.Val_label.config(text='Value (default: R,G,B,C,Prox)')
         self.Val_label.grid(column=0, padx=5, pady=5, row=3, sticky=W)
@@ -372,19 +372,19 @@ class ServoMotor:
         self.ms_1_callback = ms_1_callback
 
         self.Frame_1.config(borderwidth=5, height=200, width=200)
-        self.Frame_1.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.Frame_1.grid(column=0, row=0, sticky="NSEW")
         self.Frame_1.grid_rowconfigure(0, weight=1)
         self.Frame_1.grid_columnconfigure(0, weight=1)
 
         self.servo_pack.config(height=200, padding=(1, 1, 1, 1), text='test', width=200)
-        self.servo_pack.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.servo_pack.grid(column=0, row=0, sticky="NSEW")
         self.servo_pack.grid_rowconfigure(0, weight=1)
         self.servo_pack.grid_rowconfigure(1, weight=1)
         self.servo_pack.grid_columnconfigure(0, weight=1)
         self.servo_pack.grid_columnconfigure(1, weight=0)
 
         self.servo_0.config(borderwidth=2, padding=(1, 1, 1, 1))
-        self.servo_0.grid(column=0, padx=1, pady=1, row=0, sticky=(N, S, E, W))
+        self.servo_0.grid(column=0, padx=1, pady=1, row=0, sticky="NSEW")
         self.servo_0.grid_rowconfigure(0, weight=1)
         self.servo_0.grid_rowconfigure(1, weight=1)
         self.servo_0.grid_columnconfigure(0, weight=1)
@@ -402,10 +402,10 @@ class ServoMotor:
         self.Speed_slider_0.grid(column=1, padx=5, pady=5, row=0, sticky=(E, W))
 
         self.Java_entry_0.config(width=10)
-        self.Java_entry_0.grid(column=2, padx=5, pady=5, row=0, sticky=(N, S, E, W))
+        self.Java_entry_0.grid(column=2, padx=5, pady=5, row=0, sticky="NSEW")
 
         self.Ms_entry_0.config(width=10)
-        self.Ms_entry_0.grid(column=3, padx=5, pady=5, row=0, sticky=(N, S, E, W))
+        self.Ms_entry_0.grid(column=3, padx=5, pady=5, row=0, sticky="NSEW")
 
         self.Ms_label_0.config(text='MS (500,2500)')
         self.Ms_label_0.grid(column=3, padx=5, pady=5, row=1, sticky=(N, E, W))
@@ -417,7 +417,7 @@ class ServoMotor:
         self.Ms_button_0.grid(column=3, padx=5, pady=5, row=0, sticky=(N, S, E))
 
         self.servo_1.config(borderwidth=2, padding=(1, 1, 1, 1))
-        self.servo_1.grid(column=0, padx=1, pady=1, row=1, sticky=(N, S, E, W))
+        self.servo_1.grid(column=0, padx=1, pady=1, row=1, sticky="NSEW")
         self.servo_1.grid_rowconfigure(0, weight=1)
         self.servo_1.grid_rowconfigure(1, weight=1)
         self.servo_1.grid_columnconfigure(0, weight=1)
@@ -435,10 +435,10 @@ class ServoMotor:
         self.Speed_slider_1.grid(column=1, padx=5, pady=5, row=0, sticky=(E, W))
 
         self.Java_entry_1.config(width=10)
-        self.Java_entry_1.grid(column=2, padx=5, pady=5, row=0, sticky=(N, S, E, W))
+        self.Java_entry_1.grid(column=2, padx=5, pady=5, row=0, sticky="NSEW")
 
         self.Ms_entry_1.config(width=10)
-        self.Ms_entry_1.grid(column=3, padx=5, pady=5, row=0, sticky=(N, S, E, W))
+        self.Ms_entry_1.grid(column=3, padx=5, pady=5, row=0, sticky="NSEW")
 
         self.Ms_label_1.config(text='MS (500,2500)')
         self.Ms_label_1.grid(column=3, padx=5, pady=5, row=1, sticky=(N, E, W))
@@ -481,12 +481,12 @@ class DcMotor:
         self.java_button_callback = java_button_callback
 
         self.Frame_5.config(height=200, width=200)
-        self.Frame_5.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.Frame_5.grid(column=0, row=0, sticky="NSEW")
         self.Frame_5.grid_rowconfigure(0, weight=1)
         self.Frame_5.grid_columnconfigure(0, weight=1)
 
         self.Motor_pack.config(height=200, padding=(5, 5, 5, 5), text='motornum', width=200)
-        self.Motor_pack.grid(column=0, padx=5, pady=5, row=0, sticky=(N, S, E, W))
+        self.Motor_pack.grid(column=0, padx=5, pady=5, row=0, sticky="NSEW")
         self.Motor_pack.grid_rowconfigure(0, weight=1)
         self.Motor_pack.grid_rowconfigure(1, weight=1)
         self.Motor_pack.grid_rowconfigure(2, weight=1)
@@ -508,7 +508,7 @@ class DcMotor:
         self.Speed_button.grid(column=2, padx=5, pady=5, row=0, sticky=E)
 
         self.Java_entry.config(width=10)
-        self.Java_entry.grid(column=3, padx=5, pady=5, row=0, sticky=(N, S, E, W))
+        self.Java_entry.grid(column=3, padx=5, pady=5, row=0, sticky="NSEW")
 
         self.Java_button.config(command=java_button_callback, text='set')
         self.Java_button.grid(column=3, padx=5, pady=5, row=0, sticky=E)
@@ -555,7 +555,7 @@ class Application:
         self.IO_tab = tkinter.ttk.Frame(self.IO)
 
         self.Main_window.config(height=800, width=900)
-        self.Main_window.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.Main_window.grid(column=0, row=0, sticky="NSEW")
         self.Main_window.grid_rowconfigure(0, minsize=0, weight=1)
         self.Main_window.grid_rowconfigure(1, minsize=700, weight=1)
         self.Main_window.grid_columnconfigure(0, minsize=450, weight=1)
@@ -563,7 +563,7 @@ class Application:
         self.Main_window.grid_columnconfigure(2, minsize=20, weight=0)
 
         self.Tab_frame.config(height=240, padding=(0, 2, 0, 0), width=320)
-        self.Tab_frame.grid(column=0, columnspan=3, padx=5, pady=5, row=1, sticky=(N, S, E, W))
+        self.Tab_frame.grid(column=0, columnspan=3, padx=5, pady=5, row=1, sticky="NSEW")
 
         self.Connected_Label.grid(row=0, sticky=E)
         self.Connected_Label.config(text=' Disconnected ', background='red', foreground='white')
@@ -571,36 +571,36 @@ class Application:
         self.Top_Banner.grid(row=0, sticky=W)
 
         self.DC_Motor_frame.config(height=250, width=200)
-        self.DC_Motor_frame.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.DC_Motor_frame.grid(column=0, row=0, sticky="NSEW")
         self.DC_Motor_frame.grid_rowconfigure(0, weight=1)
         self.DC_Motor_frame.grid_columnconfigure(0, minsize=0, weight=1)
 
         self.Servo_Motor_frame.config(height=200, width=200)
-        self.Servo_Motor_frame.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.Servo_Motor_frame.grid(column=0, row=0, sticky="NSEW")
         self.Servo_Motor_frame.grid_rowconfigure(0, weight=1)
         self.Servo_Motor_frame.grid_columnconfigure(0, weight=1)
 
         self.I2C_Device_frame.config(height=200, width=200)
-        self.I2C_Device_frame.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.I2C_Device_frame.grid(column=0, row=0, sticky="NSEW")
         self.I2C_Device_frame.grid_rowconfigure(0, weight=1)
         self.I2C_Device_frame.grid_columnconfigure(0, weight=1)
 
         # self.Firmware_tab = tkinter.ttk.Frame(self.Tab_frame)
         # self.Firmware_tab.config(height=200, padding=(2, 6, 2, 6), width=200)
-        # self.Firmware_tab.grid(column=0, row=0, sticky=(N, S, E, W))
+        # self.Firmware_tab.grid(column=0, row=0, sticky="NSEW")
         # self.Firmware_tab.grid_rowconfigure(0, weight=1)
         # self.Firmware_tab.grid_columnconfigure(0, weight=1)
 
         self.IO_tab.config(height=200, padding=(2, 6, 2, 6), width=200)
-        self.IO_tab.grid(column=0, row=0, sticky=(N, S, E, W))
+        self.IO_tab.grid(column=0, row=0, sticky="NSEW")
         self.IO_tab.grid_rowconfigure(0, weight=1)
         self.IO_tab.grid_columnconfigure(0, weight=1)
 
         self.Connect_button.config(command=self.on_connect_button_callback, text='CONNECT', width=10)
-        self.Connect_button.grid(column=1, row=0, ipadx=0, ipady=0, padx=5, pady=5, sticky=(N, S, E, W))
+        self.Connect_button.grid(column=1, row=0, ipadx=0, ipady=0, padx=5, pady=5, sticky="NSEW")
 
         self.Quit_button.config(command=self.on_quit_button_callback, text='E-STOP', width=7, style='Quit.TButton')
-        self.Quit_button.grid(column=2, row=0, padx=5, pady=5, sticky=(N, S, E, W))
+        self.Quit_button.grid(column=2, row=0, padx=5, pady=5, sticky="NSEW")
 
         self.Tab_frame.add(self.DC_Motor, text='DC Motors')
 
@@ -953,7 +953,7 @@ class Application:
                 self.DC_Motor_frame.grid_rowconfigure(motor_number, weight=1)
                 self.DC_Motor_frame.grid_columnconfigure(module_number, weight=1)
                 frame = tkinter.ttk.Frame(self.DC_Motor_frame, borderwidth=5)
-                frame.grid(row=motor_number, column=module_number, sticky=(N, S, E, W))
+                frame.grid(row=motor_number, column=module_number, sticky="NSEW")
                 self.Motor_packs.append(
                     dc_motor(frame,
                              partial(self.speedMotorSlider, motor_number=motor_number, module_number=module_number),
@@ -968,7 +968,7 @@ class Application:
                 self.Servo_Motor_frame.grid_rowconfigure(motor_number, weight=1)
                 self.Servo_Motor_frame.grid_columnconfigure(module_number, weight=1)
                 frame = tkinter.ttk.Frame(self.Servo_Motor_frame, borderwidth=5)
-                frame.grid(row=motor_number, column=module_number, sticky=(N, S, E, W))
+                frame.grid(row=motor_number, column=module_number, sticky="NSEW")
                 self.Servo_packs.append(servo_motor(frame, partial(self.servoSlider, servo_number=2 * motor_number,
                                                                    module_number=module_number),
                                                     partial(self.servoJava, servo_number=motor_number * 2,
@@ -997,7 +997,7 @@ class Application:
                 self.I2C_Device_frame.grid_rowconfigure(i2cNumber, weight=1)
                 self.I2C_Device_frame.grid_columnconfigure(module_number, weight=1)
                 frame = tkinter.ttk.Frame(self.I2C_Device_frame, borderwidth=5)
-                frame.grid(row=i2cNumber + 1, column=module_number, sticky=(N, S, E, W))
+                frame.grid(row=i2cNumber + 1, column=module_number, sticky="NSEW")
                 self.I2C_packs.append(
                     i2c_chan(frame, partial(self.colorSenseAdd, bus_number=i2cNumber, module_number=module_number),
                              partial(self.colorSensePoll, bus_number=i2cNumber, module_number=module_number)))
@@ -1009,14 +1009,14 @@ class Application:
         for module_number in range(0, module_tot):
             self.IO_tab.grid_columnconfigure(module_number, weight=1)
             frame = tkinter.ttk.Frame(self.IO_tab, borderwidth=5)
-            frame.grid(row=0, column=module_number, sticky=(N, S, E, W))
+            frame.grid(row=0, column=module_number, sticky="NSEW")
             self.IO_packs.append(io_box(frame, partial(self.analogAdd, module_number)))
             self.IO_packs[-1].analog_pack.config(text='Analog Inputs Module: ' + str(module_number))
             self.IO_packs[-1].digital_pack.config(text='Digital Input/Outputs Module: ' + str(module_number))
             self.IO_packs[-1].innerFrame.grid_columnconfigure(0, weight=1)
             for i in range(0, 4):
                 frame = tkinter.ttk.Frame(self.IO_packs[-1].innerFrame, borderwidth=5)
-                frame.grid(row=i, column=0, sticky=(N, S, E, W))
+                frame.grid(row=i, column=0, sticky="NSEW")
                 self.IO_packs[-1].innerFrame.grid_rowconfigure(i, weight=1)
                 self.Analog_panels.append(analog_single(frame))
                 self.Analog_panels[-1].analog_label_1.config(text=str('Analog ' + str(i)))
@@ -1024,7 +1024,7 @@ class Application:
             for i in range(0, 4):
                 for j in range(0, 2):
                     frame = tkinter.ttk.Frame(self.IO_packs[-1].innerFrame_1, borderwidth=5)
-                    frame.grid(row=i, column=j, sticky=(N, S, E, W))
+                    frame.grid(row=i, column=j, sticky="NSEW")
                     self.IO_packs[-1].innerFrame_1.grid_rowconfigure(i, weight=1)
                     self.IO_packs[-1].innerFrame_1.grid_columnconfigure(j, weight=1)
                     self.Digital_panels.append(
@@ -1038,7 +1038,7 @@ class Application:
 
     #     for module_number in range(0, moduleTot):
     #         frame = tkinter.ttk.Frame(self.firmware.Device_info_frame1, borderwidth=5)
-    #         frame.grid(row=1, column=module_number, sticky=(N, S, E, W))
+    #         frame.grid(row=1, column=module_number, sticky="NSEW")
     #         self.devce_info.append(device_info(frame, partial(self.set_address_callback, module_number=module_number)))
     #         self.devce_info[-1].addr_entry.delete(0, END)
     #         self.devce_info[-1].addr_entry.insert(0, str(self.REVModules[module_number].getModuleAddress()))
@@ -1049,7 +1049,7 @@ class Application:
 
     # def buildFirmwareFrame(self):
     #     frame = tkinter.ttk.Frame(self.Firmware_tab, borderwidth=5)
-    #     frame.grid(row=0, column=0, sticky=(N, S, E, W))
+    #     frame.grid(row=0, column=0, sticky="NSEW")
     #     self.firmware = firmware_tab(frame, partial(self.firmware_bin_select), partial(self.firmware_flash))
     #     self.firmware.warning_block.insert(END, 'Firmware update to be performed to the Expansion Hub connected via USB only. \n\t\t\nFirmware update is to be performed with only REV qualified .bin files located in the default installation directory\n\t\t\n\nWARNING: incorrect firmware can brick the device.\n\nModified firmware files are not FTC legal.\n')
     #     self.firmware.warning_block.config(state='disabled')
@@ -1213,7 +1213,7 @@ def initwindow():
             pass
 
     app = Application(xroot)
-    xroot.protocol('WM_DELETE_WINDOW', app.joinThreads)
+    xroot.protocol('WM_DELETE_WINDOW', app.join_threads)
     print('Loading application...')
     xroot.mainloop()
 
