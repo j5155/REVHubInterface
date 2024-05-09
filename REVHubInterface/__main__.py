@@ -97,7 +97,7 @@ class DeviceInfo:
 #        self.Device_info_frame1.grid_columnconfigure(0, weight=1)
 #
 #        self.firmware_label.config(text='Interface Version: ' + self.INTERFACE_VERSION, width=10)
-#        self.firmware_label.grid(column=0, columnspan=2, padx=5, pady=5, row=1, sticky=(E, W))
+#        self.firmware_label.grid(column=0, columnspan=2, padx=5, pady=5, row=1, sticky="EW")
 #
 #        self.warning_block.config(height=11, width=50, wrap='word')
 #        self.warning_block.grid(column=0, columnspan=2, row=0, sticky="NSEW")
@@ -141,7 +141,7 @@ class DigitalSingle:
         self.Frame_1.grid(column=0, row=1, columnspan=1, sticky="NSEW")
 
         self.Separator_1.config(orient='vertical')
-        self.Separator_1.grid(column=3, padx=5, row=1, sticky=(N, S))
+        self.Separator_1.grid(column=3, padx=5, row=1, sticky="NS")
 
         self.State_label.config(text='State read:')
         self.State_label.grid(column=4, row=1)
@@ -198,7 +198,7 @@ class AnalogSingle:
         self.voltage_value_1.grid(column=1, padx=5, row=1, sticky=W)
 
         self.analog_scale_1.config(length=100, maximum=3.3, orient='horizontal', value=0)
-        self.analog_scale_1.grid(column=4, row=1, sticky=(E, W))
+        self.analog_scale_1.grid(column=4, row=1, sticky="EW")
 
         self.java_label_1.config(borderwidth=0, text='Java: ')
         self.java_label_1.grid(column=2, row=1, sticky=W)
@@ -233,7 +233,7 @@ class IoBox:
 
         self.Button_1.config(command=lambda: analog_add())
         self.Button_1.config(text='POLL')
-        self.Button_1.grid(column=0, row=1, sticky=(E, W))
+        self.Button_1.grid(column=0, row=1, sticky="EW")
 
         self.innerFrame.config(height=200, width=200)
         self.innerFrame.grid(column=0, row=0, sticky="NSEW")
@@ -324,13 +324,13 @@ class I2cChan:
         self.Val_label.grid(column=0, padx=5, pady=5, row=3, sticky=W)
 
         self.I2C_value.config(text='n/a', width=12)
-        self.I2C_value.grid(column=1, columnspan=2, padx=5, pady=5, row=3, sticky=(E, W))
+        self.I2C_value.grid(column=1, columnspan=2, padx=5, pady=5, row=3, sticky="EW")
 
         self.Config_button.config(command=add_col_callback, text='INIT', width=6)
-        self.Config_button.grid(column=1, padx=5, pady=5, row=0, sticky=(E, W))
+        self.Config_button.grid(column=1, padx=5, pady=5, row=0, sticky="EW")
 
         self.Poll_button.config(command=poll_col_callback, text='POLL', state=tkinter.DISABLED, width=10)
-        self.Poll_button.grid(column=2, columnspan=1, padx=5, pady=5, row=0, sticky=(E, W))
+        self.Poll_button.grid(column=2, columnspan=1, padx=5, pady=5, row=0, sticky="EW")
 
 
 class ServoMotor:
@@ -393,13 +393,13 @@ class ServoMotor:
         self.servo_0.grid_columnconfigure(3, weight=1)
 
         self.Servo_num_0.config(justify='left', text='Servo 0', width=0)
-        self.Servo_num_0.grid(column=0, padx=5, pady=5, row=0, sticky=(E, W))
+        self.Servo_num_0.grid(column=0, padx=5, pady=5, row=0, sticky="EW")
 
         self.Java_label_0.config(text='Java (0,1)')
-        self.Java_label_0.grid(column=2, padx=5, pady=5, row=1, sticky=(N, E, W))
+        self.Java_label_0.grid(column=2, padx=5, pady=5, row=1, sticky="NEW")
 
         self.Speed_slider_0.config(command=slider_0_callback, from_=500, orient='horizontal', to=2500, value=1500)
-        self.Speed_slider_0.grid(column=1, padx=5, pady=5, row=0, sticky=(E, W))
+        self.Speed_slider_0.grid(column=1, padx=5, pady=5, row=0, sticky="EW")
 
         self.Java_entry_0.config(width=10)
         self.Java_entry_0.grid(column=2, padx=5, pady=5, row=0, sticky="NSEW")
@@ -408,13 +408,13 @@ class ServoMotor:
         self.Ms_entry_0.grid(column=3, padx=5, pady=5, row=0, sticky="NSEW")
 
         self.Ms_label_0.config(text='MS (500,2500)')
-        self.Ms_label_0.grid(column=3, padx=5, pady=5, row=1, sticky=(N, E, W))
+        self.Ms_label_0.grid(column=3, padx=5, pady=5, row=1, sticky="NEW")
 
         self.Java_button_0.config(command=java_0_callback, text='set', width=3)
-        self.Java_button_0.grid(column=2, padx=5, pady=5, row=0, sticky=(N, S, E))
+        self.Java_button_0.grid(column=2, padx=5, pady=5, row=0, sticky="NSE")
 
         self.Ms_button_0.config(command=ms_0_callback, text='set', width=3)
-        self.Ms_button_0.grid(column=3, padx=5, pady=5, row=0, sticky=(N, S, E))
+        self.Ms_button_0.grid(column=3, padx=5, pady=5, row=0, sticky="NSE")
 
         self.servo_1.config(borderwidth=2, padding=(1, 1, 1, 1))
         self.servo_1.grid(column=0, padx=1, pady=1, row=1, sticky="NSEW")
@@ -426,13 +426,13 @@ class ServoMotor:
         self.servo_1.grid_columnconfigure(3, weight=1)
 
         self.Servo_num_1.config(justify='left', text='Servo 1', width=0)
-        self.Servo_num_1.grid(column=0, padx=5, pady=5, row=0, sticky=(E, W))
+        self.Servo_num_1.grid(column=0, padx=5, pady=5, row=0, sticky="EW")
 
         self.Java_label_1.config(text='Java (0,1)')
-        self.Java_label_1.grid(column=2, padx=5, pady=5, row=1, sticky=(N, E, W))
+        self.Java_label_1.grid(column=2, padx=5, pady=5, row=1, sticky="NEW")
 
         self.Speed_slider_1.config(command=slider_1_callback, from_=500, orient='horizontal', to=2500, value=1500)
-        self.Speed_slider_1.grid(column=1, padx=5, pady=5, row=0, sticky=(E, W))
+        self.Speed_slider_1.grid(column=1, padx=5, pady=5, row=0, sticky="EW")
 
         self.Java_entry_1.config(width=10)
         self.Java_entry_1.grid(column=2, padx=5, pady=5, row=0, sticky="NSEW")
@@ -441,13 +441,13 @@ class ServoMotor:
         self.Ms_entry_1.grid(column=3, padx=5, pady=5, row=0, sticky="NSEW")
 
         self.Ms_label_1.config(text='MS (500,2500)')
-        self.Ms_label_1.grid(column=3, padx=5, pady=5, row=1, sticky=(N, E, W))
+        self.Ms_label_1.grid(column=3, padx=5, pady=5, row=1, sticky="NEW")
 
         self.Java_button_1.config(command=java_1_callback, text='set', width=3)
-        self.Java_button_1.grid(column=2, padx=5, pady=5, row=0, sticky=(N, S, E))
+        self.Java_button_1.grid(column=2, padx=5, pady=5, row=0, sticky="NSE")
 
         self.Ms_button_1.config(command=ms_1_callback, text='set', width=3)
-        self.Ms_button_1.grid(column=3, padx=5, pady=5, row=0, sticky=(N, S, E))
+        self.Ms_button_1.grid(column=3, padx=5, pady=5, row=0, sticky="NSE")
 
     def update_java0(self, event):
         self.java_0_callback()
@@ -496,13 +496,13 @@ class DcMotor:
         self.Motor_pack.grid_columnconfigure(3, weight=2)
 
         self.Speed_slider.config(command=speed_slider_callback, from_=-32000, orient='horizontal', to=32000)
-        self.Speed_slider.grid(column=1, padx=5, pady=5, row=0, sticky=(E, W))
+        self.Speed_slider.grid(column=1, padx=5, pady=5, row=0, sticky="EW")
 
         self.Motor_values.config(justify='left', text='Current (mA): %3d\n\nEncoder: %3d' % (0, 0))
-        self.Motor_values.grid(column=0, padx=5, pady=5, row=1, sticky=(E, W))
+        self.Motor_values.grid(column=0, padx=5, pady=5, row=1, sticky="EW")
 
         self.Java_label.config(text='Speed (-1,1)')
-        self.Java_label.grid(column=3, padx=5, pady=5, row=1, sticky=(E, W))
+        self.Java_label.grid(column=3, padx=5, pady=5, row=1, sticky="EW")
 
         self.Speed_button.config(command=speed_button_callback, text='Zero')
         self.Speed_button.grid(column=2, padx=5, pady=5, row=0, sticky=E)
@@ -514,7 +514,7 @@ class DcMotor:
         self.Java_button.grid(column=3, padx=5, pady=5, row=0, sticky=E)
 
         self.Controls_label.config(text='Controls:')
-        self.Controls_label.grid(column=0, padx=5, pady=5, row=0, sticky=(E, W))
+        self.Controls_label.grid(column=0, padx=5, pady=5, row=0, sticky="EW")
 
     def update_java(self, event):
         self.java_button_callback()
