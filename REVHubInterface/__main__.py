@@ -13,8 +13,25 @@ import tkinter as tk, tkinter.ttk, tkinter.filedialog, tkinter.messagebox, os, s
 #     print(platform.system)
 #     tkinter.messagebox.showerror('Drivers Not Detected', 'Please verify the correct drivers are installed.  Without the correct dirvers, firmware update functionality will be unavailable.\n\n - Windows 10 and above should automatically install the correct drivers when the Expansion Hub is plugged in.\n\n - Windows 7 requires a manual install. Please see this link for the correct driver (FTDI D2xx): https://www.ftdichip.com/Drivers/CDM/CDM21228_Setup.zip\n\n - On macOS, install libftdi via Homebrew: "brew install libftdi"\n\n - On Linux, install libftdi.  On Debian/Ubuntu-based systems, install it via "sudo apt install libftdi1"\n\nException Message:\n' + str(e))
 
-class DeviceInfo():
-    def __init__(self, root, setAddress):
+def validate_float(action, index, value_if_allowed, prior_value, text, validation_type, trigger_type,
+                   widget_name):
+    if action == '1':
+        if text in '0123456789':
+            try:
+                if 255 > int(value_if_allowed) > 0:
+                    return True
+                else:
+                    return False
+            except ValueError:
+                return False
+        else:
+            return False
+    else:
+        return True
+
+
+class DeviceInfo:
+    def __init__(self, root, set_address):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
         root.grid(sticky=(N, S, E, W))
@@ -34,7 +51,7 @@ class DeviceInfo():
         self.Frame_1.config(height=200, width=200)
         self.Frame_1.grid(column=0, row=0, sticky=E)
 
-        self.Button_1.config(command=setAddress, text='Set Address', width=10)
+        self.Button_1.config(command=set_address, text='Set Address', width=10)
         self.Button_1.grid(column=2, row=0, sticky=E)
 
         vcmd = (
@@ -43,22 +60,6 @@ class DeviceInfo():
         self.addr_entry = tkinter.ttk.Entry(self.device_info_frame, validate='key', validatecommand=vcmd)
         self.addr_entry.config(width=10)
         self.addr_entry.grid(column=3, padx=5, pady=5, row=0, sticky=E)
-
-    def validate_float(self, action, index, value_if_allowed, prior_value, text, validation_type, trigger_type,
-                       widget_name):
-        if action == '1':
-            if text in '0123456789':
-                try:
-                    if int(value_if_allowed) < 255 and int(value_if_allowed) > 0:
-                        return True
-                    else:
-                        return False
-                except ValueError:
-                    return False
-            else:
-                return False
-        else:
-            return True
 
 
 # class firmware_tab():
@@ -101,7 +102,7 @@ class DeviceInfo():
 #        self.Button_2.grid(column=1, row=0, sticky=W)
 
 
-class DigitalSingle():
+class DigitalSingle:
     def __init__(self, root, set_input_callback, set_output_callback, digital_set, digital_poll):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -149,7 +150,7 @@ class DigitalSingle():
         self.poll_button.grid(column=2, row=0, sticky=E)
 
 
-class AnalogSingle():
+class AnalogSingle:
     def __init__(self, root):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -196,7 +197,7 @@ class AnalogSingle():
         self.java_value_1.grid(column=3, padx=5, row=1, sticky=W)
 
 
-class IoBox():
+class IoBox:
     def __init__(self, root, analog_add):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -236,7 +237,7 @@ class IoBox():
         self.innerFrame_1.grid(column=0, row=0, sticky=(N, S, E, W))
 
 
-class ImuBox():
+class ImuBox:
     def __init__(self, root, poll_imu_callback):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -271,7 +272,7 @@ class ImuBox():
         self.Poll_button.grid(column=1, padx=5, pady=5, row=0)
 
 
-class I2cChan():
+class I2cChan:
     def __init__(self, root, add_col_callback, poll_col_callback):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -322,7 +323,7 @@ class I2cChan():
         self.Poll_button.grid(column=2, columnspan=1, padx=5, pady=5, row=0, sticky=(E, W))
 
 
-class ServoMotor():
+class ServoMotor:
     def __init__(self, root, slider_0_callback, java_0_callback, ms_0_callback, slider_1_callback, java_1_callback,
                  ms_1_callback):
         root.grid_columnconfigure(0, weight=1)
@@ -451,7 +452,7 @@ class ServoMotor():
         self.ms_1_callback()
 
 
-class DcMotor():
+class DcMotor:
     def __init__(self, root, speed_slider_callback, speed_button_callback, java_button_callback):
         self.root = root
         self.root.grid_columnconfigure(0, weight=1)
@@ -509,7 +510,7 @@ class DcMotor():
         self.java_button_callback()
 
 
-class Application():
+class Application:
 
     def __init__(self, root):
         self.root = root
@@ -537,12 +538,12 @@ class Application():
         self.DC_Motor = tkinter.ttk.Frame(self.Tab_frame)
         self.Servo_Motor = tkinter.ttk.Frame(self.Tab_frame)
         self.I2C_Device = tkinter.ttk.Frame(self.Tab_frame)
-        #self.Firmware_Update = tkinter.ttk.Frame(self.Tab_frame)
+        # self.Firmware_Update = tkinter.ttk.Frame(self.Tab_frame)
         self.IO = tkinter.ttk.Frame(self.Tab_frame)
         self.DC_Motor_frame = tkinter.ttk.Frame(self.DC_Motor)
         self.Servo_Motor_frame = tkinter.ttk.Frame(self.Servo_Motor)
         self.I2C_Device_frame = tkinter.ttk.Frame(self.I2C_Device)
-        #self.Firmware_tab = tkinter.ttk.Frame(self.Firmware_Update)
+        # self.Firmware_tab = tkinter.ttk.Frame(self.Firmware_Update)
         self.IO_tab = tkinter.ttk.Frame(self.IO)
 
         self.Main_window.config(height=800, width=900)
@@ -759,7 +760,10 @@ class Application():
     def color_sense_add(self, module_number, bus_number):
         self.I2C_packs[module_number * 4 + bus_number].Config_button.config(text='Wait')
         self.root.update_idletasks()
+
+        # TODO: what is even happening with this code. why is sensor even defined. why is there a blank except. ?????
         is_2m_sensor = False
+        sensor = None
         try:
             sensor = REV2mSensor(self.commMod, bus_number, self.REVModules[module_number].getModuleAddress())
             is_2m_sensor = sensor.Is2mDistanceSensor()
@@ -767,7 +771,7 @@ class Application():
             pass
 
         is_initialized = False
-        if is_2m_sensor:
+        if is_2m_sensor & (sensor is not None):
             self.I2C_packs[module_number * 4 + bus_number].I2C_label.config(
                 text='2m Distance Sensor                     ')
             self.I2C_packs[module_number * 4 + bus_number].Val_label.config(text='Value (Distance mm)    ')
@@ -1067,20 +1071,20 @@ class Application():
     def is_valid_firmware(self, filename):
         name, ext = os.path.splitext(filename)
         if ext != '.bin':
-            return (False, "Invalid file name, firmware file extension is '.bin'")
+            return False, "Invalid file name, firmware file extension is '.bin'"
         filesize = os.path.getsize(filename)
         if filesize > 1048576 or filesize < 1000:
-            return (False, 'Invalid binary size, valid firmware is < 1MB')
+            return False, 'Invalid binary size, valid firmware is < 1MB'
         return (
             True, '')
 
     def firmware_bin_select(self):
         tmp_filename = tkinter.filedialog.askopenfilename(initialdir='./', title='Select file',
                                                           filetypes=(('bin files', '*.bin'), ('all files', '*.*')))
-        if tmp_filename == None or tmp_filename == '':
+        if tmp_filename is None or tmp_filename == '':
             return
         is_valid, err = self.isValidFirmware(tmp_filename)
-        if is_valid == False:
+        if not is_valid:
             err_msg = 'Attempted to open invalid firmware file: ' + tmp_filename + '\r\n' + err
             tkinter.messagebox.showinfo('Invalid Firmware', err_msg)
             print(err_msg)
@@ -1089,15 +1093,15 @@ class Application():
 
     def firmware_flash(self):
         try:
-            if self.filename == None or self.filename == '':
+            if self.filename is None or self.filename == '':
                 return
-        except: # TODO: uncertain why this is here. Remove or specify exception?
+        except:  # TODO: uncertain why this is here. Remove or specify exception?
             return
 
         is_valid, err = self.isValidFirmware(self.filename)
-        if is_valid == False:
+        if not is_valid:
             err_msg = ('Attempted to use an invalid firmware file: ' + self.filename + '\r\n' + err +
-                      '\r\n\r\nNo action will be done')
+                       '\r\n\r\nNo action will be done')
             tkinter.messagebox.showinfo('Invalid Firmware', err_msg)
             self.firmware.warning_block.config(state='disabled')
             return
@@ -1134,7 +1138,7 @@ class Application():
                 self.on_connect_button_callback()
                 return
             port = ''
-            if self.commMod.REVProcessor.port != None:
+            if self.commMod.REVProcessor.port is not None:
                 port = self.commMod.REVProcessor.port[3:]
             else:
                 all_ports = self.commMod.listPorts()
@@ -1145,7 +1149,6 @@ class Application():
                 else:
                     port = all_ports[0].getNumber()
             if port != '':
-                os_extension = ''
                 if platform.system() == 'Linux':
                     print('Linux detected, using no extension for sflash executable\n')
                     os_extension = ''
@@ -1154,7 +1157,7 @@ class Application():
                 cmd_line = [
                     'sflash' + os_extension, self.filename, '-c', port, '-b', '230400', '-s', '252']
                 status_msg = '\n\nProgramming HUB: COM' + port + ' with file ' + self.filename + '\n\n'
-                status_msg = status_msg + (' ').join(cmd_line) + '\n\nDO NOT REMOVE POWER WHILE PROGRAMMING...\n\n'
+                status_msg = status_msg + ' '.join(cmd_line) + '\n\nDO NOT REMOVE POWER WHILE PROGRAMMING...\n\n'
                 self.firmware.warning_block.config(state='normal')
                 self.firmware.warning_block.insert(END, status_msg)
                 self.root.update_idletasks()
