@@ -523,7 +523,7 @@ class Application():
         style = tkinter.ttk.Style()
         style.configure("Red.Label", foreground="red")
         style.configure("Green.Label", foreground="green")
-        style.configure("Quit.TButton", foreground='red', font=('TkDefaultFont', 16, 'bold'))
+        style.configure("Quit.TButton", foreground='red')
         self.Tab_frame = tkinter.ttk.Notebook(self.Main_window)
         self.Connected_Label = tkinter.ttk.Label(self.Main_window)
         try:
@@ -1056,7 +1056,7 @@ class Application():
     def every_second(self):
         for func in self.repetitiveFunctions:
             func()
-        self.root.after(250, self.every_second)
+        self.root.after(500, self.every_second)
 
     def joinThreads(self):
         self.repetitiveFunctions = []
