@@ -13,7 +13,7 @@ import tkinter as tk, tkinter.ttk, tkinter.filedialog, tkinter.messagebox, os, s
 #     print(platform.system)
 #     tkinter.messagebox.showerror('Drivers Not Detected', 'Please verify the correct drivers are installed.  Without the correct dirvers, firmware update functionality will be unavailable.\n\n - Windows 10 and above should automatically install the correct drivers when the Expansion Hub is plugged in.\n\n - Windows 7 requires a manual install. Please see this link for the correct driver (FTDI D2xx): https://www.ftdichip.com/Drivers/CDM/CDM21228_Setup.zip\n\n - On macOS, install libftdi via Homebrew: "brew install libftdi"\n\n - On Linux, install libftdi.  On Debian/Ubuntu-based systems, install it via "sudo apt install libftdi1"\n\nException Message:\n' + str(e))
 
-class device_info():
+class DeviceInfo():
     def __init__(self, root, setAddress):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -101,7 +101,7 @@ class device_info():
 #        self.Button_2.grid(column=1, row=0, sticky=W)
 
 
-class digital_single():
+class DigitalSingle():
     def __init__(self, root, setInputCallback, setOutputCallback, digital_set, digital_poll):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -149,7 +149,7 @@ class digital_single():
         self.poll_button.grid(column=2, row=0, sticky=E)
 
 
-class analog_single():
+class AnalogSingle():
     def __init__(self, root):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -196,7 +196,7 @@ class analog_single():
         self.java_value_1.grid(column=3, padx=5, row=1, sticky=W)
 
 
-class io_box():
+class IoBox():
     def __init__(self, root, analogAdd):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -236,7 +236,7 @@ class io_box():
         self.innerFrame_1.grid(column=0, row=0, sticky=(N, S, E, W))
 
 
-class imu_box():
+class ImuBox():
     def __init__(self, root, poll_imu_callback):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -271,7 +271,7 @@ class imu_box():
         self.Poll_button.grid(column=1, padx=5, pady=5, row=0)
 
 
-class i2c_chan():
+class I2cChan():
     def __init__(self, root, add_col_callback, poll_col_callback):
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
@@ -322,7 +322,7 @@ class i2c_chan():
         self.Poll_button.grid(column=2, columnspan=1, padx=5, pady=5, row=0, sticky=(E, W))
 
 
-class servo_motor():
+class ServoMotor():
     def __init__(self, root, slider_0_callback, java_0_callback, ms_0_callback, slider_1_callback, java_1_callback,
                  ms_1_callback):
         root.grid_columnconfigure(0, weight=1)
@@ -451,7 +451,7 @@ class servo_motor():
         self.ms_1_callback()
 
 
-class dc_motor():
+class DcMotor():
     def __init__(self, root, speed_slider_callback, speed_button_callback, java_button_callback):
         self.root = root
         self.root.grid_columnconfigure(0, weight=1)
@@ -523,7 +523,7 @@ class Application():
         style = tkinter.ttk.Style()
         style.configure("Red.Label", foreground="red")
         style.configure("Green.Label", foreground="green")
-        style.configure("Quit.TButton", foreground='red')
+        style.configure("Quit.TButton", foreground='red', font=('TkDefaultFont', 16, 'bold'))
         self.Tab_frame = tkinter.ttk.Notebook(self.Main_window)
         self.Connected_Label = tkinter.ttk.Label(self.Main_window)
         try:
@@ -1056,7 +1056,7 @@ class Application():
     def every_second(self):
         for func in self.repetitiveFunctions:
             func()
-        self.root.after(500, self.every_second)
+        self.root.after(250, self.every_second)
 
     def joinThreads(self):
         self.repetitiveFunctions = []
