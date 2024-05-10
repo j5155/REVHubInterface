@@ -24,7 +24,7 @@ def i2cWriteStatusQuery(commObj, destination, i2cChannel):
     i2cWriteStatusQueryMsg.payload.i2cChannel = i2cChannel
     packet = commObj.send_and_receive(i2cWriteStatusQueryMsg, destination)
     return (
-     packet.payload.i2cStatus, packet.payload.numBytes)
+        packet.payload.i2cStatus, packet.payload.numBytes)
 
 
 def i2cReadSingleByte(commObj, destination, i2cChannel, slaveAddress):
@@ -47,7 +47,7 @@ def i2cReadStatusQuery(commObj, destination, i2cChannel):
     i2cReadStatusQueryMsg.payload.i2cChannel = i2cChannel
     packet = commObj.send_and_receive(i2cReadStatusQueryMsg, destination)
     return (
-     packet.payload.i2cStatus, packet.payload.byteRead, packet.payload.payloadBytes)
+        packet.payload.i2cStatus, packet.payload.byteRead, packet.payload.payloadBytes)
 
 
 def i2cConfigureChannel(commObj, destination, i2cChannel, speedCode):
@@ -186,7 +186,8 @@ class I2CDevice:
         return int(i2cReadStatusQuery(self.commObj, self.destinationModule, self.channel)[2]) & int(byteMask, 16)
 
     def setBlockReadConfig(self, startRegister, numberOfBytes, readInterval_ms):
-        i2cBlockReadConfig(self.commObj, self.destinationModule, self.channel, self.address, startRegister, numberOfBytes, readInterval_ms)
+        i2cBlockReadConfig(self.commObj, self.destinationModule, self.channel, self.address, startRegister,
+                           numberOfBytes, readInterval_ms)
 
     def getBlockReadConfig(self):
         return i2cBlockReadQuery(self.commObj, self.destinationModule)
@@ -225,6 +226,7 @@ BDATA_REGISTER = 26
 BDATAH_REGISTER = 27
 PDATA_REGISTER = 28
 PDATAH_REGISTER = 29
+
 
 class ColorSensor(I2CDevice):
 
@@ -450,6 +452,7 @@ GRYO_AM_THRES = 30
 GRYO_AM_SET = 31
 UNIQUE_ID_FIRST = 80
 UNIQUE_ID_LAST = 95
+
 
 class IMU(I2CDevice):
 

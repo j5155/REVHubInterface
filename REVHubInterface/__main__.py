@@ -807,9 +807,9 @@ class Application:
                 text='2m Distance Sensor                     ')
             self.I2C_packs[module_number * 4 + bus_number].Val_label.config(text='Value (Distance mm)    ')
             self.REVModules[module_number].i2cChannels[bus_number].addI2CDevice(
-                    str(module_number) + 'COL' + str(bus_number), sensor)
+                str(module_number) + 'COL' + str(bus_number), sensor)
             if self.REVModules[module_number].i2cChannels[bus_number].getDevices()[
-                    str(module_number) + 'COL' + str(bus_number)].initialize():
+                str(module_number) + 'COL' + str(bus_number)].initialize():
                 self.I2C_packs[module_number * 4 + bus_number].I2C_value.config(text='REV 2m Distance Sensor Found')
                 is_initialized = True
         else:
@@ -823,9 +823,9 @@ class Application:
                 self.I2C_packs[module_number * 4 + bus_number].I2C_value.config(text='Color Sensor V3 Found')
             else:
                 self.REVModules[module_number].i2cChannels[bus_number].addColorSensor(
-                        str(module_number) + 'COL' + str(bus_number))
+                    str(module_number) + 'COL' + str(bus_number))
                 if self.REVModules[module_number].i2cChannels[bus_number].getDevices()[
-                        str(module_number) + 'COL' + str(bus_number)].initSensor():
+                    str(module_number) + 'COL' + str(bus_number)].initSensor():
                     self.I2C_packs[module_number * 4 + bus_number].I2C_value.config(text='Color Sensor V2 Found')
                     is_initialized = True
                 self.I2C_packs[module_number * 4 + bus_number].I2C_label.config(

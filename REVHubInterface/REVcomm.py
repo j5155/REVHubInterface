@@ -1,8 +1,8 @@
 import binascii
 import multiprocessing as mp
-import queue
-import serial
 import time
+
+import serial
 
 from . import REVComPorts, REVmessages as REVMsg
 from .REVModule import Module
@@ -24,17 +24,21 @@ class REVcomm:
         self.msgRcvTime = 0
         self.discoveryTimeout = 0.5
         self.averageMsgTime = 0
-        self.REVProcessor = serial.Serial(baudrate=460800, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE)
+        self.REVProcessor = serial.Serial(baudrate=460800, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE,
+                                          stopbits=serial.STOPBITS_ONE)
 
     def list_ports(self):
         REVComPorts.populateSerialPorts()
         return REVComPorts.REVPorts
 
-    def set_active_port_by_sn(self, sn):
-        REVComPorts.populateSerialPorts()
-        for port in REVComPorts.serialPorts:
-            if port.getSN() == sn:
-                setActivePort(port)
+    # commenting this out
+    # setActivePort doesn't exist, also I can find no use for this function at all??
+    # might be useful for multi hub so not completely removing it
+    # def set_active_port_by_sn(self, sn):
+    #     REVComPorts.populateSerialPorts()
+    #     for port in REVComPorts.serialPorts:
+    #         if port.getSN() == sn:
+    #             setActivePort(port)
 
     def open_active_port(self):
         num_serial_errors = 2
@@ -148,7 +152,8 @@ class REVcomm:
                                     if chksumdata[0]:
                                         newPacket = self.processPacket(incoming_packet)
                                         if self.enablePrinting:
-                                            print('<--', REVMsg.printDict[int(newPacket.header.packetType)]['Name'], '::', newPacket.getPacketData())
+                                            print('<--', REVMsg.printDict[int(newPacket.header.packetType)]['Name'],
+                                                  '::', newPacket.getPacketData())
                                         if discovery_mode:
                                             packet.append(newPacket)
                                             time.sleep(2)
@@ -182,7 +187,8 @@ class REVcomm:
             else:
                 if packetType == REVMsg.RespNum.Discovery_RSP:
                     return True
-                print('This response is for a different message. Sent: %d, Received: %d.' % (receivedPacket.header.refNum, PacketToWrite.header.msgNum))
+                print('This response is for a different message. Sent: %d, Received: %d.' % (
+                receivedPacket.header.refNum, PacketToWrite.header.msgNum))
                 return False
 
         else:
@@ -192,7 +198,8 @@ class REVcomm:
                 print("NACK'd Packet: ", REVMsg.printDict[printData]['Name'], '::', PacketToWrite.getPacketData())
                 return False
             else:
-                print('Incorrect Response Type. Response Expected: ', binascii.hexlify(str(data)), ', Response Received: ', binascii.hexlify(str(packetType)))
+                print('Incorrect Response Type. Response Expected: ', binascii.hexlify(str(data)),
+                      ', Response Received: ', binascii.hexlify(str(packetType)))
                 return False
 
     def checkPacket(self, incomingPacket, receivedChkSum):
@@ -205,12 +212,15 @@ class REVcomm:
 
     def processPacket(self, incomingPacket):
         packetFrameBytes = int(incomingPacket[REVMsg.REVPacket.FrameIndex_Start:REVMsg.REVPacket.FrameIndex_End], 16)
-        packetLength = int(self.swapEndianess(incomingPacket[REVMsg.REVPacket.LengthIndex_Start:REVMsg.REVPacket.LengthIndex_End]), 16)
-        packetDest = int(incomingPacket[REVMsg.REVPacket.DestinationIndex_Start:REVMsg.REVPacket.DestinationIndex_End], 16)
+        packetLength = int(
+            self.swapEndianess(incomingPacket[REVMsg.REVPacket.LengthIndex_Start:REVMsg.REVPacket.LengthIndex_End]), 16)
+        packetDest = int(incomingPacket[REVMsg.REVPacket.DestinationIndex_Start:REVMsg.REVPacket.DestinationIndex_End],
+                         16)
         packetSrc = int(incomingPacket[REVMsg.REVPacket.SourceIndex_Start:REVMsg.REVPacket.SourceIndex_End], 16)
         packetMsgNum = int(incomingPacket[REVMsg.REVPacket.MsgNumIndex_Start:REVMsg.REVPacket.MsgNumIndex_End], 16)
         packetRefNum = int(incomingPacket[REVMsg.REVPacket.RefNumIndex_Start:REVMsg.REVPacket.RefNumIndex_End], 16)
-        packetCommandNum = int(self.swapEndianess(incomingPacket[REVMsg.REVPacket.PacketTypeIndex_Start:REVMsg.REVPacket.PacketTypeIndex_End]), 16)
+        packetCommandNum = int(self.swapEndianess(
+            incomingPacket[REVMsg.REVPacket.PacketTypeIndex_Start:REVMsg.REVPacket.PacketTypeIndex_End]), 16)
         packetPayload = incomingPacket[REVMsg.REVPacket.HeaderIndex_End:-2]
         packetChkSum = int(incomingPacket[-2:], 16)
         newPacket = REVMsg.printDict[packetCommandNum]['Packet']()
@@ -224,7 +234,8 @@ class REVcomm:
         bytePointer = 0
         for payloadMember in newPacket.payload.getOrderedMembers():
             valueToAdd = REVMsg.REVBytes(len(payloadMember))
-            valueToAdd.data = int(self.swapEndianess(packetPayload[bytePointer:bytePointer + len(payloadMember) * 2]), 16)
+            valueToAdd.data = int(self.swapEndianess(packetPayload[bytePointer:bytePointer + len(payloadMember) * 2]),
+                                  16)
             newPacket.payload.payloadMember = valueToAdd
             bytePointer = bytePointer + len(payloadMember) * 2
 
@@ -262,7 +273,7 @@ class REVcomm:
         queryInterfaceMsg.payload.interfaceName = interfaceName
         packet = self.send_and_receive(queryInterfaceMsg, destination)
         return (
-         packet.payload.packetID, packet.numValues)
+            packet.payload.packetID, packet.numValues)
 
     def setModuleLEDColor(self, destination, redPower, greenPower, bluePower):
         setModuleLEDColorMsg = REVMsg.SetModuleLEDColor()
@@ -275,12 +286,12 @@ class REVcomm:
         getModuleLEDColorMsg = REVMsg.GetModuleLEDColor()
         packet = self.send_and_receive(getModuleLEDColorMsg, destination)
         return (
-         packet.payload.redPower, packet.payload.greenPower, packet.payload.bluePower)
+            packet.payload.redPower, packet.payload.greenPower, packet.payload.bluePower)
 
     def setModuleLEDPattern(self, destination, stepArray):
         setModuleLEDPatternMsg = REVMsg.SetModuleLEDPattern()
         for i, step in enumerate(stepArray.patt):
-            setattr(setModuleLEDPatternMsg.payload, ('rgbtStep{}').format(i), step)  
+            setattr(setModuleLEDPatternMsg.payload, ('rgbtStep{}').format(i), step)
         self.send_and_receive(setModuleLEDPatternMsg, destination)
 
     def getModuleLEDPattern(self, destination):

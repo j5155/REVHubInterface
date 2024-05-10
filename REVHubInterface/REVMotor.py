@@ -10,6 +10,7 @@ FLOAT_AT_ZERO = 1
 VELOCITY_OFFSET = 6
 CURRENT_OFFSET = 8
 
+
 def setMotorChannelMode(commObj, destination, motorChannel, motorMode, floatAtZero):
     setMotorChannelModeMsg = REVMsg.SetMotorChannelMode()
     setMotorChannelModeMsg.payload.motorChannel = motorChannel
@@ -23,7 +24,7 @@ def getMotorChannelMode(commObj, destination, motorChannel):
     getMotorChannelModeMsg.payload.motorChannel = motorChannel
     packet = commObj.send_and_receive(getMotorChannelModeMsg, destination)
     return (
-     packet.payload.motorChannelMode, packet.payload.floatAtZero)
+        packet.payload.motorChannelMode, packet.payload.floatAtZero)
 
 
 def setMotorChannelEnable(commObj, destination, motorChannel, enabled):
@@ -101,7 +102,7 @@ def getMotorTargetPosition(commObj, destination, motorChannel):
     getMotorTargetPositionMsg.payload.motorChannel = motorChannel
     packet = commObj.send_and_receive(getMotorTargetPositionMsg, destination)
     return (
-     packet.payload.targetPosition, packet.payload.atTargetTolerance)
+        packet.payload.targetPosition, packet.payload.atTargetTolerance)
 
 
 def getMotorAtTarget(commObj, destination, motorChannel):
@@ -141,7 +142,7 @@ def getMotorPIDCoefficients(commObj, destination, motorChannel, mode):
     i = int(packet.payload.i) / Q16
     d = int(packet.payload.d) / Q16
     return (
-     p, i, d)
+        p, i, d)
 
 
 def getBulkPIDData(commObj, destination, motorChannel):
