@@ -5,6 +5,7 @@ import re
 defaultComPort = 0
 comPortCommand = ''
 testFixture = False
+REVPorts = []
 
 
 class comPort:
@@ -42,7 +43,6 @@ def getPorts():
 
 
 def populateSerialPorts():
-    global REVPorts
     global serialPorts
     serialPorts = getPorts()
     REVPorts = []

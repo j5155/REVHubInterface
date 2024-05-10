@@ -42,7 +42,7 @@ class REVcomm:
 
     def open_active_port(self):
         num_serial_errors = 2
-        while not self.REVProcessor.isOpen():
+        while not self.REVProcessor.is_open:
             self.REVProcessor.port = self.list_ports()[0].getName()
             try:
                 self.REVProcessor.open()
@@ -95,7 +95,7 @@ class REVcomm:
                     self.REVProcessor.write(binascii.unhexlify(packet_to_write.getPacketData()))
                     wait_time_start = time.time()
                     timeout = False
-                    while self.REVProcessor.inWaiting() == 0:
+                    while self.REVProcessor.in_waiting == 0:
                         if time.time() - wait_time_start > 1:
                             timeout = True
                             retry_attempt += 1
@@ -107,8 +107,8 @@ class REVcomm:
                     if discovery_mode:
                         packet = []
                     # TODO: all of this should be a proper state machine
-                    if self.REVProcessor.inWaiting() > 0:
-                        while self.REVProcessor.inWaiting() > 0:
+                    if self.REVProcessor.in_waiting > 0: # TODO: this if statement isnt needed at all???
+                        while self.REVProcessor.in_waiting > 0:
                             retry = False
                             # TODO: this is a little weird
                             # why not just put it all on one line?
@@ -157,7 +157,7 @@ class REVcomm:
                                         if discovery_mode:
                                             packet.append(newPacket)
                                             time.sleep(2)
-                                            if self.REVProcessor.inWaiting() > 0:
+                                            if self.REVProcessor.in_waiting > 0:
                                                 pass
                                             else:
                                                 return packet
@@ -165,7 +165,6 @@ class REVcomm:
                                             return newPacket
                                     else:
                                         print('Invalid ChkSum: ', chksumdata[1], '==', chksumdata[2])
-                                    rcvStarted = False
                                     parse_state = self.WaitForFrameByte1
 
                 else:
@@ -198,7 +197,7 @@ class REVcomm:
                 print("NACK'd Packet: ", REVMsg.printDict[printData]['Name'], '::', PacketToWrite.getPacketData())
                 return False
             else:
-                print('Incorrect Response Type. Response Expected: ', binascii.hexlify(str(data)),
+                print('Incorrect Response Type. Response Expected: ', binascii.hexlify(data),
                       ', Response Received: ', binascii.hexlify(str(packetType)))
                 return False
 
