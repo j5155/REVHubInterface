@@ -38,5 +38,5 @@ class ADCPin:
         getADC = REVMsg.GetADC()
         getADC.payload.adcChannel = self.channel
         getADC.payload.rawMode = rawMode
-        packet = self.commObj.sendAndReceive(getADC, self.destinationModule)
+        packet = self.commObj.send_and_receive(getADC, self.destinationModule)
         return packet.payload.adcValue

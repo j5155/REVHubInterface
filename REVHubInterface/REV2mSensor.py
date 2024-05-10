@@ -514,7 +514,7 @@ class REV2mSensor(I2CDevice):
 
 if __name__ == '__main__':
     commMod = REVComm.REVcomm()
-    commMod.openActivePort()
+    commMod.open_active_port()
     REVModules = commMod.discovery()
     numHubs = len(REVModules)
     if numHubs < 1:
@@ -531,4 +531,4 @@ if __name__ == '__main__':
 
     else:
         print('No sensor found, quitting...')
-    commMod.closeActivePort()
+    commMod.close_active_port()

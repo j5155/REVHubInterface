@@ -7,7 +7,7 @@ def i2cWriteSingleByte(commObj, destination, i2cChannel, slaveAddress, byteToWri
     i2cWriteSingleByteMsg.payload.i2cChannel = i2cChannel
     i2cWriteSingleByteMsg.payload.slaveAddress = slaveAddress
     i2cWriteSingleByteMsg.payload.byteToWrite = byteToWrite
-    commObj.sendAndReceive(i2cWriteSingleByteMsg, destination)
+    commObj.send_and_receive(i2cWriteSingleByteMsg, destination)
 
 
 def i2cWriteMultipleBytes(commObj, destination, i2cChannel, slaveAddress, numBytes, bytesToWrite):
@@ -16,13 +16,13 @@ def i2cWriteMultipleBytes(commObj, destination, i2cChannel, slaveAddress, numByt
     i2cWriteMultipleBytesMsg.payload.slaveAddress = slaveAddress
     i2cWriteMultipleBytesMsg.payload.numBytes = numBytes
     i2cWriteMultipleBytesMsg.payload.bytesToWrite = bytesToWrite
-    commObj.sendAndReceive(i2cWriteMultipleBytesMsg, destination)
+    commObj.send_and_receive(i2cWriteMultipleBytesMsg, destination)
 
 
 def i2cWriteStatusQuery(commObj, destination, i2cChannel):
     i2cWriteStatusQueryMsg = REVMsg.I2CWriteStatusQuery()
     i2cWriteStatusQueryMsg.payload.i2cChannel = i2cChannel
-    packet = commObj.sendAndReceive(i2cWriteStatusQueryMsg, destination)
+    packet = commObj.send_and_receive(i2cWriteStatusQueryMsg, destination)
     return (
      packet.payload.i2cStatus, packet.payload.numBytes)
 
@@ -31,7 +31,7 @@ def i2cReadSingleByte(commObj, destination, i2cChannel, slaveAddress):
     i2cReadSingleByteMsg = REVMsg.I2CReadSingleByte()
     i2cReadSingleByteMsg.payload.i2cChannel = i2cChannel
     i2cReadSingleByteMsg.payload.slaveAddress = slaveAddress
-    commObj.sendAndReceive(i2cReadSingleByteMsg, destination)
+    commObj.send_and_receive(i2cReadSingleByteMsg, destination)
 
 
 def i2cReadMultipleBytes(commObj, destination, i2cChannel, slaveAddress, numBytes):
@@ -39,13 +39,13 @@ def i2cReadMultipleBytes(commObj, destination, i2cChannel, slaveAddress, numByte
     i2cReadMultipleBytesMsg.payload.i2cChannel = i2cChannel
     i2cReadMultipleBytesMsg.payload.slaveAddress = slaveAddress
     i2cReadMultipleBytesMsg.payload.numBytes = numBytes
-    commObj.sendAndReceive(i2cReadMultipleBytesMsg, destination)
+    commObj.send_and_receive(i2cReadMultipleBytesMsg, destination)
 
 
 def i2cReadStatusQuery(commObj, destination, i2cChannel):
     i2cReadStatusQueryMsg = REVMsg.I2CReadStatusQuery()
     i2cReadStatusQueryMsg.payload.i2cChannel = i2cChannel
-    packet = commObj.sendAndReceive(i2cReadStatusQueryMsg, destination)
+    packet = commObj.send_and_receive(i2cReadStatusQueryMsg, destination)
     return (
      packet.payload.i2cStatus, packet.payload.byteRead, packet.payload.payloadBytes)
 
@@ -54,13 +54,13 @@ def i2cConfigureChannel(commObj, destination, i2cChannel, speedCode):
     i2cConfigureChannelMsg = REVMsg.I2CConfigureChannel()
     i2cConfigureChannelMsg.payload.i2cChannel = i2cChannel
     i2cConfigureChannelMsg.payload.speedCode = speedCode
-    commObj.sendAndReceive(i2cConfigureChannelMsg, destination)
+    commObj.send_and_receive(i2cConfigureChannelMsg, destination)
 
 
 def i2cConfigureQuery(commObj, destination, i2cChannel):
     i2cConfigureQueryMsg = REVMsg.I2CConfigureQuery()
     i2cConfigureQueryMsg.payload.i2cChannel = i2cChannel
-    packet = commObj.sendAndReceive(i2cConfigureQueryMsg, destination)
+    packet = commObj.send_and_receive(i2cConfigureQueryMsg, destination)
     return packet.payload.speedCode
 
 
@@ -71,12 +71,12 @@ def i2cBlockReadConfig(commObj, destination, i2cChannel, address, startRegister,
     i2cBlockReadConfigMsg.startRegister = startRegister
     i2cBlockReadConfigMsg.numberOfBytes = numberOfBytes
     i2cBlockReadConfigMsg.readInterval_ms = readInterval_ms
-    commObj.sendAndReceive(i2cBlockReadConfigMsg, destination)
+    commObj.send_and_receive(i2cBlockReadConfigMsg, destination)
 
 
 def i2cBlockReadQuery(commObj, destination):
     i2cBlockReadQueryMsg = REVMsg.I2CBlockReadQuery()
-    packet = commObj.sendAndReceive(i2cBlockReadQueryMsg, destination)
+    packet = commObj.send_and_receive(i2cBlockReadQueryMsg, destination)
     return packet
 
 
@@ -85,12 +85,12 @@ def imuBlockReadConfig(commObj, destination, startRegister, numberOfBytes, readI
     imuBlockReadConfigMsg.startRegister = startRegister
     imuBlockReadConfigMsg.numberOfBytes = numberOfBytes
     imuBlockReadConfigMsg.readInterval_ms = readInterval_ms
-    commObj.sendAndReceive(imuBlockReadConfigMsg, destination)
+    commObj.send_and_receive(imuBlockReadConfigMsg, destination)
 
 
 def imuBlockReadQuery(commObj, destination):
     imuBlockReadQueryMsg = REVMsg.IMUBlockReadQuery()
-    packet = commObj.sendAndReceive(imuBlockReadQueryMsg, destination)
+    packet = commObj.send_and_receive(imuBlockReadQueryMsg, destination)
     return packet
 
 

@@ -21,7 +21,7 @@ from REVHubInterface.REVcomm import *
 #                                  'firmware update functionality will be unavailable.'
 #                                  '\n\n - Windows 10 and above should'
 #                                  ' automatically install the correct drivers when the Expansion Hub is plugged in.'
-#                                  '\n\n - Windows 7 requires a manual install. Please see this link '
+#                                  '\n\n - Windows 7 requires a manual installation. Please see this link '
 #                                  'for the correct driver (FTDI D2xx): '
 #                                  'https://www.ftdichip.com/Drivers/CDM/CDM21228_Setup.zip\n\n '
 #                                  '- On macOS, install libftdi via Homebrew: "brew install libftdi"\n\n '
@@ -121,7 +121,6 @@ class DigitalSingle:
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
         root.grid(sticky="NSEW")
-        true = True
         self.var2 = tk.IntVar()
         self.digital_panel = tkinter.ttk.Frame(root)
         self.digital_label_1 = tkinter.ttk.Label(self.digital_panel)
@@ -138,7 +137,7 @@ class DigitalSingle:
         self.digital_panel.grid_rowconfigure(0, weight=1)
         self.digital_panel.grid_columnconfigure(0, weight=1)
 
-        self.digital_label_1.config(takefocus=true, text='Digital 0:', width=8)
+        self.digital_label_1.config(takefocus=True, text='Digital 0:', width=8)
         self.digital_label_1.grid(column=0, row=0, sticky=W, padx=0, pady=0, columnspan=1)
 
         self.Frame_1.config(height=200, width=200)
@@ -453,6 +452,7 @@ class ServoMotor:
         self.Ms_button_1.config(command=ms_1_callback, text='set', width=3)
         self.Ms_button_1.grid(column=3, padx=5, pady=5, row=0, sticky="NSE")
 
+    # event is defined as an arg but unused so other things can call it (very weird)
     def update_java0(self, event):
         self.java_0_callback()
 
@@ -520,6 +520,7 @@ class DcMotor:
         self.Controls_label.config(text='Controls:')
         self.Controls_label.grid(column=0, padx=5, pady=5, row=0, sticky="EW")
 
+    # event argument allows other things to call it (don't ask me why)
     def update_java(self, event):
         self.java_button_callback()
 
@@ -538,6 +539,12 @@ def is_valid_firmware(filename):
 class Application:
 
     def __init__(self, root):
+        self.I2C_packs = []
+        self.IMUs = []
+        self.IO_packs = []
+        self.Digital_panels = []
+        self.Analog_panels = []
+        self.device_info = []
         self.Servo_packs = []
         self.Motor_packs = []
         self.moduleNames = []
@@ -547,7 +554,6 @@ class Application:
         self.repetitiveFunctions = []
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_columnconfigure(0, weight=1)
-        true = True
         self.Main_window = tkinter.ttk.Frame(root)
         style = tkinter.ttk.Style()
         style.configure("Quit.TButton", foreground='red')
@@ -557,7 +563,7 @@ class Application:
             dir_path = os.path.dirname(os.path.realpath(__file__))
             self.Top_Banner_Image = tk.PhotoImage(file=dir_path + '/resource/banner.gif')
             self.Top_Banner = tkinter.Label(self.Main_window, image=self.Top_Banner_Image)
-        except: # TODO: bare except! fix!
+        except tk.TclError:
             self.Top_Banner = tkinter.Label(self.Main_window)
 
         self.Connect_button = tkinter.ttk.Button(self.Main_window)
@@ -656,7 +662,7 @@ class Application:
                 self.Connected_Label.config(text=' Connected ', background='green', foreground='white')
                 module.getStatus()
 
-    def speed_motor_slider(self, speed, module_number, motor_number, *args):
+    def speed_motor_slider(self, speed, module_number, motor_number):
         self.Motor_packs[module_number * 4 + motor_number].Java_entry.delete(0, END)
         self.Motor_packs[module_number * 4 + motor_number].Java_entry.insert(0, '%.2f' % (float(speed) / 32000))
         self.REVModules[module_number].motors[motor_number].setPower(float(speed))
@@ -666,7 +672,7 @@ class Application:
         self.repetitiveFunctions.append((lambda: self.update_motor_labels(motor_number, module_number)))
         return True
 
-    def speed_motor_entry(self, motor_number, module_number, *args):
+    def speed_motor_entry(self, motor_number, module_number):
         speed = 0
         self.Motor_packs[module_number * 4 + motor_number].Speed_slider.set(speed)
         self.Motor_packs[module_number * 4 + motor_number].Java_entry.delete(0, END)
@@ -678,7 +684,7 @@ class Application:
         self.repetitiveFunctions.append((lambda: self.update_motor_labels(motor_number, module_number)))
         return True
 
-    def java_motor_entry(self, motor_number, module_number, *args):
+    def java_motor_entry(self, motor_number, module_number):
         try:
             speed = float(self.Motor_packs[module_number * 4 + motor_number].Java_entry.get())
         except ValueError:
@@ -699,7 +705,7 @@ class Application:
         self.Motor_packs[module_number * 4 + motor_number].Motor_values.config(
             text='Current (mA): %3d\n\nEncoder: %3d' % (current, position))
 
-    def servo_slider(self, pulse, module_number, servo_number, *args):
+    def servo_slider(self, pulse, module_number, servo_number):
         if servo_number % 2 == 0:
             pulse = float(pulse)
             self.Servo_packs[module_number * 3 + int(servo_number / 2)].Java_entry_0.delete(0, END)
@@ -720,8 +726,7 @@ class Application:
             (lambda: self.send_all_ka())]
         return True
 
-    def servo_java(self, servo_number, module_number, *args):
-        pulse = 0
+    def servo_java(self, servo_number, module_number):
         if servo_number % 2 == 0:
             try:
                 pulse = float(self.Servo_packs[module_number * 3 + int(servo_number / 2)].Java_entry_0.get())
@@ -752,8 +757,7 @@ class Application:
             (lambda: self.send_all_ka())]
         return True
 
-    def servo_ms(self, servo_number, module_number, *args):
-        pulse = 0
+    def servo_ms(self, servo_number, module_number):
         if servo_number % 2 == 0:
             try:
                 pulse = float(self.Servo_packs[module_number * 3 + int(servo_number / 2)].Ms_entry_0.get())
@@ -803,9 +807,9 @@ class Application:
                 text='2m Distance Sensor                     ')
             self.I2C_packs[module_number * 4 + bus_number].Val_label.config(text='Value (Distance mm)    ')
             self.REVModules[module_number].i2cChannels[bus_number].addI2CDevice(
-                str(module_number) + 'COL' + str(bus_number), sensor)
+                    str(module_number) + 'COL' + str(bus_number), sensor)
             if self.REVModules[module_number].i2cChannels[bus_number].getDevices()[
-                str(module_number) + 'COL' + str(bus_number)].initialize():
+                    str(module_number) + 'COL' + str(bus_number)].initialize():
                 self.I2C_packs[module_number * 4 + bus_number].I2C_value.config(text='REV 2m Distance Sensor Found')
                 is_initialized = True
         else:
@@ -819,9 +823,9 @@ class Application:
                 self.I2C_packs[module_number * 4 + bus_number].I2C_value.config(text='Color Sensor V3 Found')
             else:
                 self.REVModules[module_number].i2cChannels[bus_number].addColorSensor(
-                    str(module_number) + 'COL' + str(bus_number))
+                        str(module_number) + 'COL' + str(bus_number))
                 if self.REVModules[module_number].i2cChannels[bus_number].getDevices()[
-                    str(module_number) + 'COL' + str(bus_number)].initSensor():
+                        str(module_number) + 'COL' + str(bus_number)].initSensor():
                     self.I2C_packs[module_number * 4 + bus_number].I2C_value.config(text='Color Sensor V2 Found')
                     is_initialized = True
                 self.I2C_packs[module_number * 4 + bus_number].I2C_label.config(
@@ -953,16 +957,16 @@ class Application:
         return self.moduleNames
 
     def set_address_callback(self, module_number):
-        addr = int(self.devce_info[module_number].addr_entry.get())
+        addr = int(self.device_info[module_number].addr_entry.get())
         if addr < 1 or addr > 255:
             return
         self.REVModules[module_number].setAddress(addr)
         for i in range(0, len(self.REVModules)):
-            self.devce_info[i].addr_entry.delete(0, END)
-            self.devce_info[i].addr_entry.insert(0, str(self.REVModules[i].getModuleAddress()))
+            self.device_info[i].addr_entry.delete(0, END)
+            self.device_info[i].addr_entry.insert(0, str(self.REVModules[i].getModuleAddress()))
 
     def on_connect_button_callback(self):
-        self.commMod.openActivePort()
+        self.commMod.open_active_port()
         module_tot = len(self.check_for_modules())
         self.Quit_button.config(state='enabled')
         for tab in self.Tab_frame.tabs():
@@ -993,15 +997,15 @@ class Application:
                 self.Servo_packs.append(ServoMotor(frame, partial(self.servo_slider, servo_number=2 * motor_number,
                                                                   module_number=module_number),
                                                    partial(self.servo_java, servo_number=motor_number * 2,
-                                                            module_number=module_number),
+                                                           module_number=module_number),
                                                    partial(self.servo_ms, servo_number=motor_number * 2,
-                                                            module_number=module_number),
+                                                           module_number=module_number),
                                                    partial(self.servo_slider, servo_number=motor_number * 2 + 1,
-                                                            module_number=module_number),
+                                                           module_number=module_number),
                                                    partial(self.servo_java, servo_number=motor_number * 2 + 1,
-                                                            module_number=module_number),
+                                                           module_number=module_number),
                                                    partial(self.servo_ms, servo_number=motor_number * 2 + 1,
-                                                            module_number=module_number)))
+                                                           module_number=module_number)))
                 self.Servo_packs[-1].servo_pack.config(
                     text='Module: ' + str(module_number) + ' Motors: ' + str(motor_number * 2) + ' & ' + str(
                         motor_number * 2 + 1))
@@ -1055,32 +1059,41 @@ class Application:
                                       partial(self.digital_add, module_number, i * 2 + j)))
                     self.Digital_panels[-1].digital_label_1.config(text=str(i * 2 + j))
 
-        self.devce_info = []
+        self.device_info = []
+        """
+        for module_number in range(0, module_tot):
+             frame = tkinter.ttk.Frame(self.firmware.Device_info_frame1, borderwidth=5)
+             frame.grid(row=1, column=module_number, sticky="NSEW")
+             self.device_info.append(device_info(frame, partial(self.set_address_callback, 
+                                                                module_number=module_number)))
+             self.device_info[-1].addr_entry.delete(0, END)
+             self.device_info[-1].addr_entry.insert(0, str(self.REVModules[module_number].getModuleAddress()))
+             self.device_info[-1].device_label.config(text='Module: ' + str(module_number))
+        """
+        # self.firmware.firmware_label.config(text='Interface Version: ' + self.firmware.INTERFACE_VERSION +
+        #                                         '\nFirmware Version: ' + self.REVModules[0].getVersionString())
+        self.root.after(500, self.every_second)
 
-    #     for module_number in range(0, moduleTot):
-    #         frame = tkinter.ttk.Frame(self.firmware.Device_info_frame1, borderwidth=5)
-    #         frame.grid(row=1, column=module_number, sticky="NSEW")
-    #         self.devce_info.append(device_info(frame, partial(self.set_address_callback, module_number=module_number)))
-    #         self.devce_info[-1].addr_entry.delete(0, END)
-    #         self.devce_info[-1].addr_entry.insert(0, str(self.REVModules[module_number].getModuleAddress()))
-    #         self.devce_info[-1].device_label.config(text='Module: ' + str(module_number))
-
-    #     self.firmware.firmware_label.config(text='Interface Version: ' + self.firmware.INTERFACE_VERSION + '\nFirmware Version: ' + self.REVModules[0].getVersionString())
-    #     self.root.after(500, self.every_second)
-
-    # def buildFirmwareFrame(self):
-    #     frame = tkinter.ttk.Frame(self.Firmware_tab, borderwidth=5)
-    #     frame.grid(row=0, column=0, sticky="NSEW")
-    #     self.firmware = firmware_tab(frame, partial(self.firmware_bin_select), partial(self.firmware_flash))
-    #     self.firmware.warning_block.insert(END, 'Firmware update to be performed to the Expansion Hub connected via USB only. \n\t\t\nFirmware update is to be performed with only REV qualified .bin files located in the default installation directory\n\t\t\n\nWARNING: incorrect firmware can brick the device.\n\nModified firmware files are not FTC legal.\n')
-    #     self.firmware.warning_block.config(state='disabled')
+    """
+     def buildFirmwareFrame(self):
+         frame = tkinter.ttk.Frame(self.Firmware_tab, borderwidth=5)
+         frame.grid(row=0, column=0, sticky="NSEW")
+         self.firmware = firmware_tab(frame, partial(self.firmware_bin_select), partial(self.firmware_flash))
+         self.firmware.warning_block.insert(END, 'Firmware update to be performed to the Expansion Hub '
+                                                 'connected via USB only. '
+                                                 '\n\t\t\nFirmware update is to be performed with only REV qualified '
+                                                 '.bin files located in the default installation directory'
+                                                 '\n\t\t\n\nWARNING: incorrect firmware can brick the device.'
+                                                 '\n\nModified firmware files are not FTC legal.\n')
+         self.firmware.warning_block.config(state='disabled')
+     """
 
     def on_quit_button_callback(self):
         for module in self.REVModules:
             module.killSwitch()
 
         self.repetitiveFunctions = []
-        self.commMod.closeActivePort()
+        self.commMod.close_active_port()
         self.Quit_button.config(state='disabled')
         self.Connected_Label.config(text=' Disconnected ', background='red', foreground='white')
         for i in range(0, len(self.Tab_frame.tabs())):
@@ -1094,8 +1107,9 @@ class Application:
 
     def join_threads(self):
         self.repetitiveFunctions = []
-        self.commMod.closeActivePort()
+        self.commMod.close_active_port()
         self.root.quit()
+
     """ commented out: firmware doesn't work yet
     def firmware_bin_select(self):
         tmp_filename = tkinter.filedialog.askopenfilename(initialdir='./', title='Select file',
