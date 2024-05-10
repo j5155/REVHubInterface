@@ -1,10 +1,15 @@
+import os
+import tkinter as tk
+import tkinter.filedialog
+import tkinter.messagebox
+import tkinter.ttk
+from functools import partial
+from tkinter.constants import *
+
 from REVHubInterface import REVcomm  # relative imports don't work here due to pyinstaller issue
 from REVHubInterface.REV2mSensor import REV2mSensor
 from REVHubInterface.REVColorSensorV3 import REVColorSensorV3
 from REVHubInterface.REVcomm import *
-from functools import partial
-from sys import platform
-import tkinter as tk, tkinter.ttk, tkinter.filedialog, tkinter.messagebox, os, subprocess, time, platform
 
 
 # try:
@@ -23,8 +28,7 @@ import tkinter as tk, tkinter.ttk, tkinter.filedialog, tkinter.messagebox, os, s
 #                                  '- On Linux, install libftdi.  On Debian/Ubuntu-based systems, install it '
 #                                  'via "sudo apt install libftdi1"\n\nException Message:\n' + str(e))
 
-def validate_float(action, index, value_if_allowed, prior_value, text, validation_type, trigger_type,
-                   widget_name):
+def validate_float(action, value_if_allowed, text):
     if action == '1':
         if text in '0123456789':
             try:
@@ -65,7 +69,7 @@ class DeviceInfo:
         self.Button_1.grid(column=2, row=0, sticky=E)
 
         vcmd = (
-            root.register(self.validate_float), '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
+            root.register(validate_float), '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
 
         self.addr_entry = tkinter.ttk.Entry(self.device_info_frame, validate='key', validatecommand=vcmd)
         self.addr_entry.config(width=10)
@@ -118,7 +122,7 @@ class DigitalSingle:
         root.grid_rowconfigure(0, weight=1)
         root.grid(sticky="NSEW")
         true = True
-        self.var2 = IntVar()
+        self.var2 = tk.IntVar()
         self.digital_panel = tkinter.ttk.Frame(root)
         self.digital_label_1 = tkinter.ttk.Label(self.digital_panel)
         self.Frame_1 = tkinter.ttk.Frame(self.digital_panel)
@@ -520,9 +524,23 @@ class DcMotor:
         self.java_button_callback()
 
 
+def is_valid_firmware(filename):
+    name, ext = os.path.splitext(filename)
+    if ext != '.bin':
+        return False, "Invalid file name, firmware file extension is '.bin'"
+    filesize = os.path.getsize(filename)
+    if filesize > 1048576 or filesize < 1000:
+        return False, 'Invalid binary size, valid firmware is < 1MB'
+    return (
+        True, '')
+
+
 class Application:
 
     def __init__(self, root):
+        self.Servo_packs = []
+        self.Motor_packs = []
+        self.moduleNames = []
         self.root = root
         self.REVModules = []
         self.commMod = REVcomm()
@@ -538,9 +556,9 @@ class Application:
         try:
             dir_path = os.path.dirname(os.path.realpath(__file__))
             self.Top_Banner_Image = tk.PhotoImage(file=dir_path + '/resource/banner.gif')
-            self.Top_Banner = Label(self.Main_window, image=self.Top_Banner_Image)
-        except:
-            self.Top_Banner = Label(self.Main_window)
+            self.Top_Banner = tkinter.Label(self.Main_window, image=self.Top_Banner_Image)
+        except: # TODO: bare except! fix!
+            self.Top_Banner = tkinter.Label(self.Main_window)
 
         self.Connect_button = tkinter.ttk.Button(self.Main_window)
         self.Quit_button = tkinter.ttk.Button(self.Main_window)
@@ -645,7 +663,7 @@ class Application:
         self.REVModules[module_number].motors[motor_number].enable()
         self.repetitiveFunctions = [
             (lambda: self.send_all_ka())]
-        self.repetitiveFunctions.append((lambda: self.updateMotorLabels(motor_number, module_number)))
+        self.repetitiveFunctions.append((lambda: self.update_motor_labels(motor_number, module_number)))
         return True
 
     def speed_motor_entry(self, motor_number, module_number, *args):
@@ -657,7 +675,7 @@ class Application:
         self.REVModules[module_number].motors[motor_number].enable()
         self.repetitiveFunctions = [
             (lambda: self.send_all_ka())]
-        self.repetitiveFunctions.append((lambda: self.updateMotorLabels(motor_number, module_number)))
+        self.repetitiveFunctions.append((lambda: self.update_motor_labels(motor_number, module_number)))
         return True
 
     def java_motor_entry(self, motor_number, module_number, *args):
@@ -672,7 +690,7 @@ class Application:
         self.REVModules[module_number].motors[motor_number].enable()
         self.repetitiveFunctions = [
             (lambda: self.send_all_ka())]
-        self.repetitiveFunctions.append((lambda: self.updateMotorLabels(motor_number, module_number)))
+        self.repetitiveFunctions.append((lambda: self.update_motor_labels(motor_number, module_number)))
         return True
 
     def update_motor_labels(self, motor_number, module_number):
@@ -820,11 +838,11 @@ class Application:
             str(module_number) + 'COL' + str(bus_number)].getType()
         self.repetitiveFunctions = [(lambda: self.send_all_ka())]
         if sensor_type == 'REV2mSensor':
-            self.repetitiveFunctions.append((lambda: self.update2mSensor(module_number, bus_number)))
+            self.repetitiveFunctions.append((lambda: self.update_2m_sensor(module_number, bus_number)))
         elif sensor_type == 'REVColorSensorV3':
-            self.repetitiveFunctions.append((lambda: self.updateColorDeviceV3(module_number, bus_number)))
+            self.repetitiveFunctions.append((lambda: self.update_color_device_v3(module_number, bus_number)))
         else:
-            self.repetitiveFunctions.append((lambda: self.updateColorDevice(module_number, bus_number)))
+            self.repetitiveFunctions.append((lambda: self.update_color_device(module_number, bus_number)))
 
     def update_2m_sensor(self, module_number, bus_number):
         distance_mm = self.REVModules[module_number].i2cChannels[bus_number].getDevices()[
@@ -865,7 +883,7 @@ class Application:
         self.REVModules[module_number].i2cChannels[0].getDevices()[str(module_number) + 'IMU'].initSensor()
         self.repetitiveFunctions = [
             (lambda: self.send_all_ka())]
-        self.repetitiveFunctions.append((lambda: self.updateImuDevice(module_number, 0)))
+        self.repetitiveFunctions.append((lambda: self.update_imu_device(module_number, 0)))
 
     def update_imu_device(self, module_number, bus_number):
         heading, roll, pitch = self.REVModules[module_number].i2cChannels[bus_number].getDevices()[
@@ -880,7 +898,7 @@ class Application:
     def analog_add(self, module_number):
         self.repetitiveFunctions = [
             (lambda: self.send_all_ka())]
-        self.repetitiveFunctions.append((lambda: self.analogUpdate(module_number)))
+        self.repetitiveFunctions.append((lambda: self.analog_update(module_number)))
 
     def analog_update(self, module_number):
         for i in range(0, 4):
@@ -893,6 +911,7 @@ class Application:
     def digital_set_as_output(self, module_number, dio_number):
         self.repetitiveFunctions = [(lambda: self.send_all_ka())]
         self.REVModules[module_number].dioPins[module_number * 2 + dio_number].setAsOutput()
+        # TODO: use styles here, see https://docs.python.org/3/library/tkinter.ttk.html#ttk-widgets
         self.Digital_panels[module_number * 8 + dio_number].output_button.config(background='#aaccff')
         self.Digital_panels[module_number * 8 + dio_number].input_button.config(background='#ffffff')
         self.Digital_panels[module_number * 8 + dio_number].poll_button.config(state='disabled')
@@ -901,6 +920,7 @@ class Application:
 
     def digital_set_as_input(self, module_number, dio_number):
         self.REVModules[module_number].dioPins[module_number * 2 + dio_number].setAsInput()
+        # TODO: use styles here, see https://docs.python.org/3/library/tkinter.ttk.html#ttk-widgets
         self.Digital_panels[module_number * 8 + dio_number].input_button.config(background='#aaccff')
         self.Digital_panels[module_number * 8 + dio_number].output_button.config(background='#ffffff')
         self.Digital_panels[module_number * 8 + dio_number].poll_button.config(state='normal')
@@ -913,7 +933,7 @@ class Application:
     def digital_add(self, module_number, dio_number):
         self.repetitiveFunctions = [
             (lambda: self.send_all_ka())]
-        self.repetitiveFunctions.append((lambda: self.digitalUpdate(module_number, dio_number)))
+        self.repetitiveFunctions.append((lambda: self.digital_update(module_number, dio_number)))
 
     def digital_update(self, module_number, dio_number):
         value = self.REVModules[module_number].dioPins[dio_number].getInput()
@@ -943,7 +963,7 @@ class Application:
 
     def on_connect_button_callback(self):
         self.commMod.openActivePort()
-        module_tot = len(self.checkForModules())
+        module_tot = len(self.check_for_modules())
         self.Quit_button.config(state='enabled')
         for tab in self.Tab_frame.tabs():
             self.Tab_frame.tab(tab, state='normal')
@@ -956,10 +976,10 @@ class Application:
                 frame = tkinter.ttk.Frame(self.DC_Motor_frame, borderwidth=5)
                 frame.grid(row=motor_number, column=module_number, sticky="NSEW")
                 self.Motor_packs.append(
-                    dc_motor(frame,
-                             partial(self.speedMotorSlider, motor_number=motor_number, module_number=module_number),
-                             partial(self.speedMotorEntry, motor_number=motor_number, module_number=module_number),
-                             partial(self.javaMotorEntry, motor_number=motor_number, module_number=module_number)))
+                    DcMotor(frame,
+                            partial(self.speed_motor_slider, motor_number=motor_number, module_number=module_number),
+                            partial(self.speed_motor_entry, motor_number=motor_number, module_number=module_number),
+                            partial(self.java_motor_entry, motor_number=motor_number, module_number=module_number)))
                 self.Motor_packs[-1].Motor_pack.config(
                     text='Module: ' + str(module_number) + ' Motors: ' + str(motor_number))
 
@@ -970,17 +990,17 @@ class Application:
                 self.Servo_Motor_frame.grid_columnconfigure(module_number, weight=1)
                 frame = tkinter.ttk.Frame(self.Servo_Motor_frame, borderwidth=5)
                 frame.grid(row=motor_number, column=module_number, sticky="NSEW")
-                self.Servo_packs.append(servo_motor(frame, partial(self.servoSlider, servo_number=2 * motor_number,
-                                                                   module_number=module_number),
-                                                    partial(self.servoJava, servo_number=motor_number * 2,
+                self.Servo_packs.append(ServoMotor(frame, partial(self.servo_slider, servo_number=2 * motor_number,
+                                                                  module_number=module_number),
+                                                   partial(self.servo_java, servo_number=motor_number * 2,
                                                             module_number=module_number),
-                                                    partial(self.servoMS, servo_number=motor_number * 2,
+                                                   partial(self.servo_ms, servo_number=motor_number * 2,
                                                             module_number=module_number),
-                                                    partial(self.servoSlider, servo_number=motor_number * 2 + 1,
+                                                   partial(self.servo_slider, servo_number=motor_number * 2 + 1,
                                                             module_number=module_number),
-                                                    partial(self.servoJava, servo_number=motor_number * 2 + 1,
+                                                   partial(self.servo_java, servo_number=motor_number * 2 + 1,
                                                             module_number=module_number),
-                                                    partial(self.servoMS, servo_number=motor_number * 2 + 1,
+                                                   partial(self.servo_ms, servo_number=motor_number * 2 + 1,
                                                             module_number=module_number)))
                 self.Servo_packs[-1].servo_pack.config(
                     text='Module: ' + str(module_number) + ' Motors: ' + str(motor_number * 2) + ' & ' + str(
@@ -993,15 +1013,15 @@ class Application:
             self.I2C_Device_frame.grid_columnconfigure(module_number, weight=1)
             frame = tkinter.ttk.Frame(self.I2C_Device_frame, borderwidth=5)
             frame.grid(row=0, column=module_number, sticky=W)
-            self.IMUs.append(imu_box(frame, partial(self.imuAdd, module_number)))
+            self.IMUs.append(ImuBox(frame, partial(self.imu_add, module_number)))
             for i2cNumber in range(0, 4):
                 self.I2C_Device_frame.grid_rowconfigure(i2cNumber, weight=1)
                 self.I2C_Device_frame.grid_columnconfigure(module_number, weight=1)
                 frame = tkinter.ttk.Frame(self.I2C_Device_frame, borderwidth=5)
                 frame.grid(row=i2cNumber + 1, column=module_number, sticky="NSEW")
                 self.I2C_packs.append(
-                    i2c_chan(frame, partial(self.colorSenseAdd, bus_number=i2cNumber, module_number=module_number),
-                             partial(self.colorSensePoll, bus_number=i2cNumber, module_number=module_number)))
+                    I2cChan(frame, partial(self.color_sense_add, bus_number=i2cNumber, module_number=module_number),
+                            partial(self.color_sense_poll, bus_number=i2cNumber, module_number=module_number)))
                 self.I2C_packs[-1].i2c_pack.config(text='Module: ' + str(module_number) + ' I2C Bus: ' + str(i2cNumber))
 
         self.IO_packs = []
@@ -1011,7 +1031,7 @@ class Application:
             self.IO_tab.grid_columnconfigure(module_number, weight=1)
             frame = tkinter.ttk.Frame(self.IO_tab, borderwidth=5)
             frame.grid(row=0, column=module_number, sticky="NSEW")
-            self.IO_packs.append(io_box(frame, partial(self.analogAdd, module_number)))
+            self.IO_packs.append(IoBox(frame, partial(self.analog_add, module_number)))
             self.IO_packs[-1].analog_pack.config(text='Analog Inputs Module: ' + str(module_number))
             self.IO_packs[-1].digital_pack.config(text='Digital Input/Outputs Module: ' + str(module_number))
             self.IO_packs[-1].innerFrame.grid_columnconfigure(0, weight=1)
@@ -1019,7 +1039,7 @@ class Application:
                 frame = tkinter.ttk.Frame(self.IO_packs[-1].innerFrame, borderwidth=5)
                 frame.grid(row=i, column=0, sticky="NSEW")
                 self.IO_packs[-1].innerFrame.grid_rowconfigure(i, weight=1)
-                self.Analog_panels.append(analog_single(frame))
+                self.Analog_panels.append(AnalogSingle(frame))
                 self.Analog_panels[-1].analog_label_1.config(text=str('Analog ' + str(i)))
 
             for i in range(0, 4):
@@ -1029,10 +1049,10 @@ class Application:
                     self.IO_packs[-1].innerFrame_1.grid_rowconfigure(i, weight=1)
                     self.IO_packs[-1].innerFrame_1.grid_columnconfigure(j, weight=1)
                     self.Digital_panels.append(
-                        digital_single(frame, partial(self.digitalSetAsInput, module_number, i * 2 + j),
-                                       partial(self.digitalSetAsOutput, module_number, i * 2 + j),
-                                       partial(self.digitalSetCallback, module_number, i * 2 + j),
-                                       partial(self.digitalAdd, module_number, i * 2 + j)))
+                        DigitalSingle(frame, partial(self.digital_set_as_input, module_number, i * 2 + j),
+                                      partial(self.digital_set_as_output, module_number, i * 2 + j),
+                                      partial(self.digital_set_callback, module_number, i * 2 + j),
+                                      partial(self.digital_add, module_number, i * 2 + j)))
                     self.Digital_panels[-1].digital_label_1.config(text=str(i * 2 + j))
 
         self.devce_info = []
@@ -1076,23 +1096,13 @@ class Application:
         self.repetitiveFunctions = []
         self.commMod.closeActivePort()
         self.root.quit()
-
-    def is_valid_firmware(self, filename):
-        name, ext = os.path.splitext(filename)
-        if ext != '.bin':
-            return False, "Invalid file name, firmware file extension is '.bin'"
-        filesize = os.path.getsize(filename)
-        if filesize > 1048576 or filesize < 1000:
-            return False, 'Invalid binary size, valid firmware is < 1MB'
-        return (
-            True, '')
-
+    """ commented out: firmware doesn't work yet
     def firmware_bin_select(self):
         tmp_filename = tkinter.filedialog.askopenfilename(initialdir='./', title='Select file',
                                                           filetypes=(('bin files', '*.bin'), ('all files', '*.*')))
         if tmp_filename is None or tmp_filename == '':
             return
-        is_valid, err = self.isValidFirmware(tmp_filename)
+        is_valid, err = is_valid_firmware(tmp_filename)
         if not is_valid:
             err_msg = 'Attempted to open invalid firmware file: ' + tmp_filename + '\r\n' + err
             tkinter.messagebox.showinfo('Invalid Firmware', err_msg)
@@ -1107,7 +1117,7 @@ class Application:
         except:  # TODO: uncertain why this is here. Remove or specify exception?
             return
 
-        is_valid, err = self.isValidFirmware(self.filename)
+        is_valid, err = is_valid_firmware(self.filename)
         if not is_valid:
             err_msg = ('Attempted to use an invalid firmware file: ' + self.filename + '\r\n' + err +
                        '\r\n\r\nNo action will be done')
@@ -1187,6 +1197,7 @@ class Application:
             self.root.update_idletasks()
             self.on_connect_button_callback()
             return
+        """
 
 
 def initwindow():
@@ -1205,6 +1216,7 @@ def initwindow():
         pass
 
     xroot.title('REV Hub Interface - Community Edition - v1.3.1')
+    """ commented out: no icon yet
     try:
         xroot.iconbitmap('resource\\\\favicon.ico')
     except:
@@ -1212,6 +1224,7 @@ def initwindow():
             xroot.iconbitmap('favicon.ico')
         except:
             pass
+    """
 
     app = Application(xroot)
     xroot.protocol('WM_DELETE_WINDOW', app.join_threads)

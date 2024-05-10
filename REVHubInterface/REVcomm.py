@@ -1,10 +1,12 @@
-import tkinter as tk
-from tkinter import *
-import tkinter.ttk
-import multiprocessing as mp, time
+import binascii
+import multiprocessing as mp
+import queue
+import serial
+import time
+
 from . import REVComPorts, REVmessages as REVMsg
 from .REVModule import Module
-import binascii, serial, time, queue
+
 
 class REVcomm:
 
