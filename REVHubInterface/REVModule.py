@@ -50,19 +50,19 @@ class Module:
         return self.address
 
     def getStatus(self):
-        return self.commObj.getModuleStatus(self.address)
+        return self.commObj.get_module_status(self.address)
 
     def getModuleAddress(self):
         return self.address
 
     def sendKA(self):
-        return self.commObj.keepAlive(self.address)
+        return self.commObj.keep_alive(self.address)
 
     def sendFailSafe(self):
-        self.commObj.failSafe(self.address)
+        self.commObj.fail_safe(self.address)
 
     def setAddress(self, newAddress):
-        self.commObj.setNewModuleAddress(self.address, newAddress)
+        self.commObj.set_new_module_address(self.address, newAddress)
         self.address = newAddress
         for motor in self.motors:
             motor.setDestination(newAddress)
@@ -80,13 +80,13 @@ class Module:
             dioPin.setDestination(newAddress)
 
     def getInterface(self, interface):
-        return self.commObj.queryInterface(self.address, interface)
+        return self.commObj.query_interface(self.address, interface)
 
     def setLEDColor(self, red, green, blue):
-        self.commObj.setModuleLEDColor(self.address, red, green, blue)
+        self.commObj.set_module_led_color(self.address, red, green, blue)
 
     def getLEDColor(self):
-        return self.commObj.getModuleLEDColor(self.address)
+        return self.commObj.get_module_led_color(self.address)
 
     def setLEDPattern(self, pattern):
         """ Example:
@@ -99,25 +99,25 @@ class Module:
       hub.REVModules[0].setLEDPattern(my_pattern)
       hub.REVModules[0].keepAlive()
       """
-        return self.commObj.setModuleLEDPattern(self.address, pattern)
+        return self.commObj.set_module_led_pattern(self.address, pattern)
 
     def setLogLevel(self, group, verbosity):
-        self.commObj.debugLogLevel(self.address, group, verbosity)
+        self.commObj.debug_log_level(self.address, group, verbosity)
 
     def getBulkData(self):
-        return self.commObj.getBulkInputData(self.address)
+        return self.commObj.get_bulk_input_data(self.address)
 
     def enableCharging(self):
-        self.commObj.phoneChargeControl(self.address, 1)
+        self.commObj.phone_charge_control(self.address, 1)
 
     def disableCharging(self):
-        self.commObj.phoneChargeControl(self.address, 0)
+        self.commObj.phone_charge_control(self.address, 0)
 
     def chargingEnabled(self):
-        return self.commObj.phoneChargeQuery(self.address)
+        return self.commObj.phone_charge_query(self.address)
 
     def debugOutput(self, length, hint):
-        self.commObj.injectDataLogHint(self.address, length, hint)
+        self.commObj.inject_data_log_hint(self.address, length, hint)
 
     def setAllDIO(self, values):
         REVDIO.setAllDIOOutputs(self.address, values)
@@ -126,7 +126,7 @@ class Module:
         return REVDIO.getAllDIOInputs(self.address)
 
     def getVersionString(self):
-        versionRaw = '' + self.commObj.readVersionString(self.address)
+        versionRaw = '' + self.commObj.read_version_string(self.address)
         versionStr = ''
         for i in range(0, int(len(versionRaw) / 2)):
             tmpHex = int(str(versionRaw)[i * 2] + str(versionRaw)[i * 2 + 1], 16)
@@ -140,13 +140,13 @@ class Module:
         return REVI2C.imuBlockReadQuery(self.address)
 
     def getBulkMotorData(self):
-        return self.commObj.getBulkMotorData(self.address)
+        return self.commObj.get_bulk_motor_data(self.address)
 
     def getBulkADCData(self):
-        return self.commObj.getBulkADCData(self.address)
+        return self.commObj.get_bulk_adc_data(self.address)
 
     def getBulkI2CData(self):
-        return self.commObj.getBulkI2CData(self.address)
+        return self.commObj.get_bulk_i2_c_data(self.address)
 
     def getBulkServoData(self):
-        return self.commObj.getBulkServoData(self.address)
+        return self.commObj.get_bulk_servo_data(self.address)
